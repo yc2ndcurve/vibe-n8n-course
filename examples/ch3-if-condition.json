@@ -1,0 +1,114 @@
+{
+  "name": "Ch3 - IF 條件分流",
+  "nodes": [
+    {
+      "id": "webhook-002",
+      "name": "接收訂單",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "demo-webhook-ch3",
+      "parameters": {
+        "path": "ch3-order",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "if-001",
+      "name": "金額判斷",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [470, 300],
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "" },
+          "conditions": [
+            {
+              "id": "cond-1",
+              "leftValue": "={{ $json.body.amount }}",
+              "rightValue": 1000,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "set-vip",
+      "name": "VIP 訂單",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [700, 200],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "field-1",
+              "name": "status",
+              "value": "VIP - 優先處理",
+              "type": "string"
+            },
+            {
+              "id": "field-2",
+              "name": "amount",
+              "value": "={{ $json.body.amount }}",
+              "type": "number"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set-normal",
+      "name": "一般訂單",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [700, 400],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "field-1",
+              "name": "status",
+              "value": "一般 - 標準處理",
+              "type": "string"
+            },
+            {
+              "id": "field-2",
+              "name": "amount",
+              "value": "={{ $json.body.amount }}",
+              "type": "number"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "接收訂單": {
+      "main": [
+        [
+          { "node": "金額判斷", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "金額判斷": {
+      "main": [
+        [
+          { "node": "VIP 訂單", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "一般訂單", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" }
+}

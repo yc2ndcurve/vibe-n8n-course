@@ -1,0 +1,80 @@
+{
+  "name": "Ch3 - HTTP Request 呼叫 API",
+  "nodes": [
+    {
+      "id": "trigger-002",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "id": "http-001",
+      "name": "取得匯率",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [470, 300],
+      "parameters": {
+        "url": "https://api.exchangerate-api.com/v4/latest/USD",
+        "method": "GET",
+        "options": {}
+      }
+    },
+    {
+      "id": "set-004",
+      "name": "整理匯率資料",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [700, 300],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "field-1",
+              "name": "base_currency",
+              "value": "={{ $json.base }}",
+              "type": "string"
+            },
+            {
+              "id": "field-2",
+              "name": "twd_rate",
+              "value": "={{ $json.rates.TWD }}",
+              "type": "number"
+            },
+            {
+              "id": "field-3",
+              "name": "jpy_rate",
+              "value": "={{ $json.rates.JPY }}",
+              "type": "number"
+            },
+            {
+              "id": "field-4",
+              "name": "updated_at",
+              "value": "={{ $now.format('yyyy-MM-dd HH:mm') }}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          { "node": "取得匯率", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "取得匯率": {
+      "main": [
+        [
+          { "node": "整理匯率資料", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" }
+}

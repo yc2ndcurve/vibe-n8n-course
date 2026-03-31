@@ -1,0 +1,84 @@
+{
+  "name": "Ch4 - 每日天氣 LINE 推播（Messaging API）",
+  "nodes": [
+    {
+      "id": "schedule-002",
+      "name": "每日 8:00 觸發",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http-weather",
+      "name": "取得天氣資料",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [470, 300],
+      "parameters": {
+        "url": "https://wttr.in/Taipei?format=j1&lang=zh-tw",
+        "method": "GET",
+        "options": {}
+      }
+    },
+    {
+      "id": "code-weather",
+      "name": "組合天氣訊息",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [690, 300],
+      "parameters": {
+        "jsCode": "const current = $input.first().json.current_condition[0];\nconst today = $input.first().json.weather[0];\n\nconst message = `台北今日天氣\n溫度：${current.temp_C}°C（體感 ${current.FeelsLikeC}°C）\n濕度：${current.humidity}%\n天氣：${current.weatherDesc[0].value}\n風速：${current.windspeedKmph} km/h\n日出：${today.astronomy[0].sunrise}\n日落：${today.astronomy[0].sunset}`;\n\nreturn [{ json: { message } }];"
+      }
+    },
+    {
+      "id": "http-line-002",
+      "name": "LINE 推播天氣",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [910, 300],
+      "parameters": {
+        "url": "https://api.line.me/v2/bot/message/push",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_CHANNEL_ACCESS_TOKEN"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "body": "={{ JSON.stringify({ to: 'YOUR_LINE_USER_ID', messages: [{ type: 'text', text: $json.message }] }) }}"
+      }
+    }
+  ],
+  "connections": {
+    "每日 8:00 觸發": {
+      "main": [[ { "node": "取得天氣資料", "type": "main", "index": 0 } ]]
+    },
+    "取得天氣資料": {
+      "main": [[ { "node": "組合天氣訊息", "type": "main", "index": 0 } ]]
+    },
+    "組合天氣訊息": {
+      "main": [[ { "node": "LINE 推播天氣", "type": "main", "index": 0 } ]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" }
+}

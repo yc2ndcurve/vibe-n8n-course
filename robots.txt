@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+Sitemap: https://vibe.scendia.com.tw/sitemap.xml
+
+# Allow AI crawlers for AEO/GEO
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /

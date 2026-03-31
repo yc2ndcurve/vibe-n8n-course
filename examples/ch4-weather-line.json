@@ -1,0 +1,97 @@
+{
+  "name": "Ch4 - 每日天氣 LINE 推播",
+  "nodes": [
+    {
+      "id": "schedule-002",
+      "name": "每日 8:00 觸發",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http-weather",
+      "name": "取得天氣資料",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [470, 300],
+      "parameters": {
+        "url": "https://wttr.in/Taipei?format=j1",
+        "method": "GET",
+        "options": {}
+      }
+    },
+    {
+      "id": "set-weather",
+      "name": "組合天氣訊息",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [690, 300],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "field-1",
+              "name": "message",
+              "value": "={{ '\\n台北今日天氣\\n溫度：' + $json.current_condition[0].temp_C + '°C\\n體感：' + $json.current_condition[0].FeelsLikeC + '°C\\n天氣：' + $json.current_condition[0].weatherDesc[0].value }}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http-line-002",
+      "name": "LINE 推播天氣",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [910, 300],
+      "parameters": {
+        "url": "https://notify-api.line.me/api/notify",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_LINE_NOTIFY_TOKEN"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "={{ $json.message }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "每日 8:00 觸發": {
+      "main": [[ { "node": "取得天氣資料", "type": "main", "index": 0 } ]]
+    },
+    "取得天氣資料": {
+      "main": [[ { "node": "組合天氣訊息", "type": "main", "index": 0 } ]]
+    },
+    "組合天氣訊息": {
+      "main": [[ { "node": "LINE 推播天氣", "type": "main", "index": 0 } ]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" }
+}

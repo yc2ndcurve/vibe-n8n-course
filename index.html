@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>n8n-as-code 初學者完全教學手冊</title>
+<style>
+:root{
+  --bg:#0e0918;--s1:rgba(255,255,255,.04);--s2:rgba(255,255,255,.07);--s3:rgba(255,255,255,.11);
+  --bd:rgba(255,255,255,.08);--bdh:rgba(255,255,255,.18);
+  --tx:#f0edf5;--tx2:#9b95a8;--tx3:#6b6478;
+  --pr:#ee4f27;--pr-g:rgba(238,79,39,.12);--sc:#ff9b26;
+  --gr:#35a670;--gr-g:rgba(53,166,112,.1);--bl:#3b82f6;--bl-g:rgba(59,130,246,.1);
+  --pu:#6b21ef;--pu-g:rgba(107,33,239,.1);--rd:#ef4444;
+  --r:1.5rem;--rs:.75rem;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Noto Sans TC","SF Pro Display","Segoe UI",sans-serif;background:var(--bg);color:var(--tx);line-height:1.85;-webkit-font-smoothing:antialiased;font-size:16px}
+::selection{background:var(--pr);color:#fff}
+a{color:var(--sc);text-decoration:none}a:hover{text-decoration:underline}
+code{background:var(--s2);border:1px solid var(--bd);border-radius:4px;padding:.1em .35em;font-size:.85em;font-family:"SF Mono","Fira Code",monospace;color:var(--sc)}
+h1,h2,h3,h4,h5{letter-spacing:-.01em}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(14,9,24,.82);backdrop-filter:blur(24px);border-bottom:1px solid var(--bd)}
+nav .i{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 2rem}
+nav .logo{font-weight:700;font-size:.95rem;background:linear-gradient(135deg,var(--sc),var(--pr));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+nav .lnk{display:flex;gap:1.2rem}
+nav .lnk a{color:var(--tx2);font-size:.82rem;font-weight:500;text-decoration:none}nav .lnk a:hover{color:var(--tx)}
+
+/* HERO */
+.hero{padding:7rem 2rem 3.5rem;text-align:center;max-width:900px;margin:0 auto;position:relative}
+.hero::before{content:'';position:absolute;top:50px;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(238,79,39,.07) 0%,transparent 70%);pointer-events:none}
+.hero .sub{display:inline-block;font-size:.72rem;font-weight:700;color:var(--pr);background:var(--pr-g);border:1px solid rgba(238,79,39,.2);border-radius:999px;padding:.3rem .9rem;margin-bottom:1.2rem;text-transform:uppercase;letter-spacing:1px}
+.hero h1{font-size:2.8rem;font-weight:800;line-height:1.2;margin-bottom:.8rem}
+.hero h1 span{background:linear-gradient(135deg,var(--sc),var(--pr));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero .desc{color:var(--tx2);font-size:1.05rem;max-width:650px;margin:0 auto 1.8rem}
+.brow{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap}
+.bg{background:var(--s1);border:1px solid var(--bd);border-radius:999px;padding:.3rem .85rem;font-size:.75rem;color:var(--tx2)}
+.bg b{color:var(--tx)}
+
+/* STATS */
+.sts{max-width:1100px;margin:0 auto 2rem;padding:0 2rem;display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem}
+@media(max-width:700px){.sts{grid-template-columns:repeat(2,1fr)}}
+.st{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:1.3rem;text-align:center}
+.st .n{font-size:2rem;font-weight:800}.st .n.c1{color:var(--pr)}.st .n.c2{color:var(--sc)}.st .n.c3{color:var(--gr)}.st .n.c4{color:var(--bl)}
+.st .l{font-size:.8rem;color:var(--tx2);margin-top:.15rem}
+
+/* SEC */
+.sec{max-width:1100px;margin:0 auto;padding:2rem 2rem}
+.sec-t{font-size:1.6rem;font-weight:700;margin-bottom:.3rem;text-align:center}
+.sec-d{text-align:center;color:var(--tx2);font-size:.9rem;max-width:600px;margin:0 auto 2rem}
+
+/* CHAPTER */
+.ch{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:1rem;overflow:hidden}
+.ch:hover{border-color:var(--bdh)}.ch.open{border-color:rgba(238,79,39,.25)}
+.chh{display:flex;align-items:center;gap:.8rem;padding:1.1rem 1.3rem;cursor:pointer;user-select:none}
+.chn{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;flex-shrink:0}
+.t1 .chn{background:var(--pr-g);color:var(--pr)}.t2 .chn{background:rgba(255,155,38,.1);color:var(--sc)}.t3 .chn{background:var(--gr-g);color:var(--gr)}.t4 .chn{background:var(--bl-g);color:var(--bl)}.t5 .chn{background:var(--pu-g);color:var(--pu)}.t6 .chn{background:var(--pr-g);color:var(--pr)}
+.chm{flex:1}.chm h3{font-size:1rem;font-weight:700}.chm p{font-size:.78rem;color:var(--tx2);margin-top:.05rem}
+.cht{font-size:.72rem;color:var(--tx3);background:var(--s2);border-radius:var(--rs);padding:.25rem .6rem;white-space:nowrap}
+.cha{color:var(--tx3);font-size:.75rem;transition:transform .3s}.ch.open .cha{transform:rotate(180deg)}
+.chb{max-height:0;overflow:hidden;transition:max-height .5s ease}.ch.open .chb{max-height:50000px}
+.chi{padding:.5rem 1.3rem 1.5rem}
+
+/* CONTENT BLOCKS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+@media(max-width:800px){.g2{grid-template-columns:1fr}}
+.bk{background:var(--s2);border-radius:var(--rs);padding:1.1rem 1.2rem;border:1px solid var(--bd)}
+.bk.full{grid-column:1/-1}
+.bk h4{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem}
+.dt{width:6px;height:6px;border-radius:50%;display:inline-block}
+.dt.o{background:var(--pr)}.dt.g{background:var(--gr)}.dt.b{background:var(--bl)}.dt.y{background:var(--sc)}.dt.p{background:var(--pu)}.dt.r{background:var(--rd)}
+.bk ul{list-style:none}.bk ol{padding-left:1.5rem}
+.bk li{font-size:.88rem;padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.03);line-height:1.7}
+.bk li:last-child{border:none}
+.bk ul li::before{content:"";display:inline-block;margin-top:.55rem;margin-right:.5rem;width:4px;height:4px;border-radius:50%;background:var(--pr);flex-shrink:0;vertical-align:top}
+.bk ul li{display:flex;align-items:flex-start}
+.bk p{font-size:.88rem;color:var(--tx2);line-height:1.8}
+.bk .note{font-size:.82rem;color:var(--tx3);margin-top:.6rem;padding-top:.6rem;border-top:1px solid rgba(255,255,255,.05);font-style:italic}
+.bk .warn{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:.6rem .8rem;margin-top:.6rem;font-size:.82rem;color:#fca5a5}
+
+/* Article-style text block */
+.prose{font-size:.92rem;line-height:1.9;color:var(--tx);grid-column:1/-1}
+.prose h5{font-size:1rem;font-weight:700;margin:1.5rem 0 .6rem;color:var(--tx)}
+.prose p{margin-bottom:.8rem;color:var(--tx2)}
+.prose strong{color:var(--tx)}
+.prose ul,.prose ol{margin-bottom:.8rem;padding-left:1.2rem}
+.prose li{margin-bottom:.3rem;color:var(--tx2)}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:.82rem;margin:.8rem 0}
+.tbl th{text-align:left;padding:.5rem .6rem;border-bottom:2px solid var(--bd);color:var(--tx3);font-size:.72rem;text-transform:uppercase;letter-spacing:.5px}
+.tbl td{padding:.45rem .6rem;border-bottom:1px solid rgba(255,255,255,.04);color:var(--tx2)}
+.tbl tr:hover td{background:rgba(255,255,255,.02)}
+.tbl td:first-child{color:var(--tx);font-weight:500}
+
+/* JSON */
+.jb{grid-column:1/-1;background:#0d0715;border:1px solid var(--bd);border-radius:var(--rs);overflow:hidden}
+.jh{display:flex;align-items:center;justify-content:space-between;padding:.5rem .9rem;background:var(--s2);border-bottom:1px solid var(--bd)}
+.jh span{font-size:.72rem;color:var(--tx2);font-weight:600}
+.jh a{font-size:.7rem;color:var(--pr);font-weight:600;text-decoration:none;border:1px solid rgba(238,79,39,.3);border-radius:6px;padding:.15rem .5rem}
+.jh a:hover{background:var(--pr-g);text-decoration:none}
+pre.j{padding:.8rem 1rem;overflow-x:auto;font-family:"SF Mono","Fira Code",monospace;font-size:.76rem;line-height:1.6;color:var(--tx2);max-height:500px}
+pre.j .k{color:#a78bfa}pre.j .s{color:#4ade80}pre.j .n{color:#f59e0b}pre.j .b{color:#60a5fa}pre.j .c{color:var(--tx3)}
+
+/* TIME BAR */
+.tb{grid-column:1/-1;background:var(--s2);border:1px solid var(--bd);border-radius:var(--rs);padding:.8rem 1rem}
+.br{display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;font-size:.78rem}
+.br:last-child{margin:0}
+.bl{width:55px;text-align:right;color:var(--tx3);font-weight:500;flex-shrink:0}
+.bt{flex:1;height:22px;background:rgba(255,255,255,.03);border-radius:6px;overflow:hidden}
+.bf{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:.4rem;font-size:.68rem;font-weight:700;color:#fff}
+.bf.lc{background:linear-gradient(90deg,#ee4f27,#ff6b3d)}.bf.pr{background:linear-gradient(90deg,#186f44,#35a670)}.bf.db{background:linear-gradient(90deg,#b87a14,#ff9b26)}
+
+/* FLOW DIAGRAM */
+.fd{display:flex;align-items:center;justify-content:center;gap:.3rem;flex-wrap:wrap;padding:1.2rem 0}
+.fn{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:.5rem 1rem;font-size:.8rem;font-weight:600;text-align:center}
+.fn:hover{border-color:var(--pr)}.fn small{display:block;color:var(--tx3);font-weight:400;font-size:.68rem}
+.fa{color:var(--pr);font-weight:700;font-size:1rem;margin:0 .15rem}
+.fbr{display:flex;flex-direction:column;gap:.3rem;align-items:center}
+.flb{font-size:.62rem;color:var(--tx3);font-weight:600;text-transform:uppercase}
+
+/* REF LINKS */
+.refs{grid-column:1/-1;background:var(--s1);border:1px solid var(--bd);border-radius:var(--rs);padding:.8rem 1rem}
+.refs h4{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);margin-bottom:.4rem}
+.refs a{display:inline-block;font-size:.75rem;color:var(--bl);margin-right:1rem;margin-bottom:.2rem;word-break:break-all}
+
+/* FINAL */
+.fc{background:linear-gradient(135deg,rgba(238,79,39,.05),rgba(107,33,239,.05));border:1px solid rgba(238,79,39,.18);border-radius:var(--r);padding:2.5rem;text-align:center}
+.fc h2{font-size:1.3rem;margin-bottom:.3rem}.fc .sub{color:var(--tx2);font-size:.88rem;margin-bottom:1.2rem}
+footer{text-align:center;padding:2.5rem 2rem;color:var(--tx3);font-size:.72rem;border-top:1px solid var(--bd)}
+</style>
+</head>
+<body>
+
+<nav><div class="i">
+  <div class="logo">n8n-as-code 教學手冊</div>
+  <div class="lnk"><a href="#overview">總覽</a><a href="#chapters">章節</a><a href="#final">專題</a></div>
+</div></nav>
+
+<section class="hero">
+  <div class="sub">Beginner's Complete Guide</div>
+  <h1>n8n-as-code<br><span>初學者完全教學手冊</span></h1>
+  <p class="desc">從零開始學 n8n 工作流自動化，用程式碼管理 Workflow，串接 LINE Messaging API 推播通知。每一步都有詳細說明與可匯入的 JSON 範例。</p>
+  <div class="brow">
+    <span class="bg"><b>6</b> 堂課</span>
+    <span class="bg"><b>24</b> 小時</span>
+    <span class="bg"><b>零基礎</b> 入門</span>
+    <span class="bg"><b>9</b> 個 JSON 範例</span>
+    <span class="bg">講 30% / 做 50% / 踩坑 20%</span>
+  </div>
+</section>
+
+<section class="sts" id="overview">
+  <div class="st"><div class="n c1">6</div><div class="l">堂課</div></div>
+  <div class="st"><div class="n c2">24h</div><div class="l">總時數</div></div>
+  <div class="st"><div class="n c3">9</div><div class="l">JSON 範例</div></div>
+  <div class="st"><div class="n c4">1</div><div class="l">期末專題</div></div>
+</section>
+
+<!-- ============================================================ -->
+<section class="sec" id="chapters">
+<div class="sec-t">課程章節</div>
+<div class="sec-d">每堂 4 小時，從環境建置到完整專題部署。每個章節都附有詳細說明文章與可直接匯入 n8n 的 JSON 範例。</div>
+
+<!-- ====================== CH1 ====================== -->
+<div class="ch t1 open" id="ch1">
+<div class="chh" onclick="T(this)"><div class="chn">01</div><div class="chm"><h3>環境建置 & 第一個 Workflow</h3><p>安裝 n8n、認識編輯器介面、建立並匯出你的第一條自動化流程</p></div><div class="cht">4 小時</div><div class="cha">&#9660;</div></div>
+<div class="chb"><div class="chi"><div class="g2">
+
+<div class="prose">
+<h5>什麼是 n8n？</h5>
+<p>n8n（讀作 "nodemation"）是一個<strong>開源的工作流自動化工具</strong>，讓你可以用視覺化的方式把不同的應用程式和服務串連在一起。你可以把它想像成一個「數位助理」——當某件事發生時（例如收到一封信），自動幫你做一連串的事（例如存到表格、發通知、回覆訊息）。</p>
+<p>它最大的特點是<strong>可以自己架設（self-hosted）</strong>，不像 Zapier 或 Make 只能用他們的雲端服務。這代表你的資料完全掌握在自己手上，也沒有執行次數的限制。</p>
+
+<h5>n8n vs Zapier vs Make：怎麼選？</h5>
+</div>
+
+<div class="bk full">
+<table class="tbl">
+<tr><th>比較項目</th><th>n8n</th><th>Zapier</th><th>Make</th></tr>
+<tr><td>定價</td><td>自架免費無限用<br>Cloud 起價 $20/月</td><td>起價 $29.99/月<br>每個 action 計費</td><td>起價 $9/月<br>每個 operation 計費</td></tr>
+<tr><td>自架（Self-host）</td><td>支援（Docker / npm）</td><td>不支援</td><td>不支援</td></tr>
+<tr><td>整合數量</td><td>400+ 核心 + 社群</td><td>8,000+</td><td>2,400+</td></tr>
+<tr><td>程式碼支援</td><td>完整 JavaScript + Python</td><td>有限制的 JS</td><td>僅企業版支援 JS</td></tr>
+<tr><td>AI 節點</td><td>70+ LangChain 節點</td><td>Copilot</td><td>2025 新增</td></tr>
+<tr><td>版本控制</td><td>支援 Git 整合</td><td>不支援</td><td>不支援</td></tr>
+<tr><td>適合對象</td><td>開發者、技術團隊</td><td>非技術使用者</td><td>半技術使用者</td></tr>
+<tr><td>學習曲線</td><td>較陡（需基本技術知識）</td><td>最平緩</td><td>中等</td></tr>
+</table>
+<div class="note">參考來源：<a href="https://www.flowmondo.com/article/n8n-vs-zapier-vs-make" target="_blank">Flowmondo n8n vs Zapier vs Make</a>、<a href="https://contabo.com/blog/n8n-vs-zapier-vs-make-an-in-depth-comparison/" target="_blank">Contabo 深度比較</a></div>
+</div>
+
+<div class="prose">
+<h5>三種安裝方式</h5>
+<p>n8n 提供三種安裝方式，我們在課堂上推薦使用 <strong>Docker</strong>，因為它最乾淨、可重複、不會弄亂你的電腦環境。</p>
+</div>
+
+<div class="bk">
+<h4><span class="dt o"></span> 方式一：Docker（推薦）</h4>
+<p>只需要安裝 Docker Desktop，然後執行一行指令：</p>
+<pre class="j" style="margin-top:.5rem">
+<span class="c"># 最簡安裝（開發用）</span>
+docker run -it --rm \
+  --name n8n \
+  -p 5678:5678 \
+  -v n8n_data:/home/node/.n8n \
+  n8nio/n8n
+
+<span class="c"># 打開瀏覽器 → http://localhost:5678</span>
+</pre>
+<p style="margin-top:.5rem">如果想要資料持久化（重啟不丟資料），推薦使用 <code>docker-compose.yml</code>：</p>
+<pre class="j" style="margin-top:.5rem">
+<span class="c"># docker-compose.yml</span>
+version: <span class="s">'3.8'</span>
+services:
+  n8n:
+    image: n8nio/n8n
+    restart: always
+    ports:
+      - <span class="s">"5678:5678"</span>
+    volumes:
+      - n8n_data:/home/node/.n8n
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=<span class="b">true</span>
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=changeme123
+volumes:
+  n8n_data:
+</pre>
+<pre class="j" style="margin-top:.5rem"><span class="c"># 啟動</span>
+docker compose up -d
+<span class="c"># 查看 log</span>
+docker compose logs -f</pre>
+<div class="note">參考來源：<a href="https://docs.n8n.io/hosting/installation/docker/" target="_blank">n8n 官方 Docker 文件</a></div>
+</div>
+
+<div class="bk">
+<h4><span class="dt o"></span> 方式二：npm</h4>
+<p>需要先安裝 Node.js 18 以上版本：</p>
+<pre class="j" style="margin-top:.5rem">
+<span class="c"># 確認 Node 版本</span>
+node -v  <span class="c"># 須 >= 18</span>
+
+<span class="c"># 全域安裝</span>
+npm install n8n -g
+
+<span class="c"># 啟動</span>
+n8n start
+
+<span class="c"># 或用 npx 免安裝直接跑</span>
+npx n8n
+</pre>
+<div class="note">macOS 權限問題？用 <code>mkdir ~/.npm-global && npm config set prefix '~/.npm-global'</code> 然後把 <code>~/.npm-global/bin</code> 加到 PATH。<br>參考：<a href="https://docs.n8n.io/hosting/installation/npm/" target="_blank">n8n 官方 npm 文件</a></div>
+</div>
+
+<div class="prose">
+<h5>方式三：n8n Cloud</h5>
+<p>如果不想自己架設，可以直接使用 n8n 官方提供的雲端服務。到 <a href="https://app.n8n.cloud/register" target="_blank">app.n8n.cloud/register</a> 註冊帳號，提供免費試用期，不需信用卡。Cloud 版本的好處是自動更新、自動 SSL、不需要管理伺服器，但缺點是有執行次數限制（付費制）。</p>
+
+<h5>認識 n8n 編輯器介面</h5>
+<p>進入 n8n 後，你會看到一個像白板的工作區域，這就是 <strong>Canvas（畫布）</strong>。整個編輯器分成三個區域：</p>
+</div>
+
+<div class="bk full">
+<h4><span class="dt b"></span> Editor UI 完整導覽</h4>
+<table class="tbl">
+<tr><th>區域</th><th>位置</th><th>功能說明</th></tr>
+<tr><td>左側面板</td><td>畫面左邊</td><td>所有 Workflow 清單、Credentials（憑證）管理、執行紀錄、模板庫</td></tr>
+<tr><td>上方工具列</td><td>畫面最上方</td><td>Workflow 名稱（可改）、儲存按鈕、啟用/停用切換、分享、歷史版本、匯入匯出</td></tr>
+<tr><td>Canvas 畫布</td><td>中央大區域</td><td>拖放節點、連線、執行 Workflow 的主要工作區</td></tr>
+</table>
+<p style="margin-top:.6rem"><strong>畫布上的操作：</strong></p>
+<ul>
+<li>按 <code>Tab</code> 鍵或點 <code>+</code> 按鈕 → 打開節點選擇面板</li>
+<li>拖曳節點右邊的圓點 → 連線到下一個節點</li>
+<li><code>Ctrl+S</code>（Mac: <code>Cmd+S</code>）→ 儲存</li>
+<li><code>Ctrl+Z</code>（Mac: <code>Cmd+Z</code>）→ 復原</li>
+<li>點擊節點 → 打開設定面板（Parameters / Settings / Docs 三個分頁）</li>
+</ul>
+<div class="note">參考來源：<a href="https://docs.n8n.io/courses/level-one/chapter-1/" target="_blank">n8n Level One 課程 - Editor UI</a></div>
+</div>
+
+<div class="prose">
+<h5>核心概念：Node（節點）& Connection（連線）</h5>
+<p>n8n 的一切都圍繞兩個概念：<strong>Node</strong> 和 <strong>Connection</strong>。</p>
+<p><strong>Node（節點）</strong>是 Workflow 的基本單位，每個 Node 代表一個動作。例如「接收 Webhook」、「呼叫 API」、「判斷條件」都是一個 Node。Node 分兩大類：</p>
+<ul>
+<li><strong>Trigger Node（觸發節點）</strong>：Workflow 的起點，決定「什麼時候啟動」。例如 Manual Trigger（手動觸發）、Schedule Trigger（定時觸發）、Webhook（接收外部請求）</li>
+<li><strong>Action Node（動作節點）</strong>：Workflow 的執行步驟，決定「做什麼事」。例如 Edit Fields（編輯欄位）、HTTP Request（發送 HTTP 請求）、IF（條件判斷）</li>
+</ul>
+<p><strong>Connection（連線）</strong>決定資料的流向。從 A 節點的輸出端拉一條線到 B 節點的輸入端，表示 A 的結果會傳給 B 處理。</p>
+
+<h5>動手做：建立第一個 Workflow</h5>
+</div>
+
+<div class="bk full">
+<h4><span class="dt g"></span> 實作步驟（跟著做）</h4>
+<ol>
+<li><strong>打開 n8n</strong>：瀏覽器開啟 <code>http://localhost:5678</code>，首次使用需建立帳號</li>
+<li><strong>建立新 Workflow</strong>：點左上角 <code>+</code> 或按 <code>Ctrl+Alt+N</code></li>
+<li><strong>加入 Trigger</strong>：點畫布中央的 <code>+</code>，選擇 <strong>Manual Trigger</strong></li>
+<li><strong>加入 Edit Fields</strong>：點 Manual Trigger 右邊的 <code>+</code>，搜尋 <strong>Set</strong>（或 Edit Fields）</li>
+<li><strong>設定欄位</strong>：在 Edit Fields 裡加兩個欄位：<br>
+  - Name: <code>greeting</code>，Value: <code>Hello, n8n!</code><br>
+  - Name: <code>timestamp</code>，Value: 切換成 Expression 模式，輸入 <code>{{ $now.toISO() }}</code></li>
+<li><strong>執行</strong>：點上方的 <strong>Execute Workflow</strong> 按鈕</li>
+<li><strong>查看結果</strong>：點 Edit Fields 節點，在右側看到 Output 包含 greeting 和 timestamp</li>
+<li><strong>儲存</strong>：把 Workflow 改名為「My First Workflow」，按 <code>Ctrl+S</code></li>
+</ol>
+</div>
+
+<div class="prose">
+<h5>匯出與匯入 Workflow JSON</h5>
+<p>每個 n8n Workflow 本質上就是一份 JSON 檔案。你可以把它下載下來保存，也可以從 JSON 檔案匯入。</p>
+<p><strong>匯出</strong>：點擊上方工具列的三個點 <code>...</code> → <strong>Download</strong>，會下載一個 <code>.json</code> 檔案。</p>
+<p><strong>匯入</strong>：點擊 <code>...</code> → <strong>Import from File</strong>，選擇 JSON 檔案即可。也可以直接在畫布上按 <code>Ctrl+V</code> 貼上 JSON。</p>
+<p>理解 JSON 結構是後續所有章節的基礎。以下是我們剛才做的 Workflow 完整的 JSON：</p>
+</div>
+
+<div class="bk full">
+<h4><span class="dt b"></span> 關鍵知識：Workflow JSON 結構解析</h4>
+<table class="tbl">
+<tr><th>欄位</th><th>類型</th><th>說明</th></tr>
+<tr><td><code>name</code></td><td>字串</td><td>Workflow 的顯示名稱</td></tr>
+<tr><td><code>nodes</code></td><td>陣列</td><td>所有節點的清單。每個節點有 id, name, type, position, parameters</td></tr>
+<tr><td><code>connections</code></td><td>物件</td><td>節點間的連線。key 是來源節點名稱，value 描述它連到哪個節點</td></tr>
+<tr><td><code>active</code></td><td>布林</td><td>此 Workflow 是否已啟用（true = 自動執行）</td></tr>
+<tr><td><code>settings</code></td><td>物件</td><td>全域設定，如 executionOrder</td></tr>
+</table>
+<p style="margin-top:.5rem"><strong>nodes 陣列中每個節點的結構：</strong></p>
+<ul>
+<li><code>type</code> — 決定這個節點是什麼功能（如 <code>n8n-nodes-base.manualTrigger</code>）</li>
+<li><code>parameters</code> — 這個節點的設定參數（如欄位名稱、API URL 等）</li>
+<li><code>position</code> — 在畫布上的 XY 座標，純粹用於視覺排列</li>
+</ul>
+<p style="margin-top:.3rem"><strong>connections 的結構：</strong></p>
+<ul>
+<li><code>"來源節點名": { "main": [ [ { "node": "目標節點名" } ] ] }</code></li>
+<li><code>main</code> 陣列的第一層 = 輸出端口（大部分節點只有一個，IF 節點有兩個：true/false）</li>
+<li>第二層 = 連到的目標節點（可以同時連到多個節點）</li>
+</ul>
+</div>
+
+<div class="jb">
+<div class="jh"><span>ch1-hello-world.json — 第一個 Workflow 完整範例</span><a href="examples/ch1-hello-world.json" download>下載 JSON</a></div>
+<pre class="j">{
+  <span class="k">"name"</span>: <span class="s">"Ch1 - Hello World"</span>,
+  <span class="k">"nodes"</span>: [
+    {
+      <span class="k">"id"</span>: <span class="s">"trigger-001"</span>,
+      <span class="k">"name"</span>: <span class="s">"Manual Trigger"</span>,
+      <span class="k">"type"</span>: <span class="s">"n8n-nodes-base.manualTrigger"</span>,   <span class="c">// 節點類型決定功能</span>
+      <span class="k">"typeVersion"</span>: <span class="n">1</span>,
+      <span class="k">"position"</span>: [<span class="n">250</span>, <span class="n">300</span>]              <span class="c">// 畫布上的位置 [x, y]</span>
+    },
+    {
+      <span class="k">"id"</span>: <span class="s">"set-001"</span>,
+      <span class="k">"name"</span>: <span class="s">"Edit Fields"</span>,
+      <span class="k">"type"</span>: <span class="s">"n8n-nodes-base.set"</span>,
+      <span class="k">"typeVersion"</span>: <span class="n">3.4</span>,
+      <span class="k">"position"</span>: [<span class="n">470</span>, <span class="n">300</span>],
+      <span class="k">"parameters"</span>: {                       <span class="c">// 節點的設定參數</span>
+        <span class="k">"assignments"</span>: {
+          <span class="k">"assignments"</span>: [
+            { <span class="k">"name"</span>: <span class="s">"greeting"</span>,  <span class="k">"value"</span>: <span class="s">"Hello, n8n!"</span>, <span class="k">"type"</span>: <span class="s">"string"</span> },
+            { <span class="k">"name"</span>: <span class="s">"timestamp"</span>, <span class="k">"value"</span>: <span class="s">"={{ $now.toISO() }}"</span>, <span class="k">"type"</span>: <span class="s">"string"</span> }
+          ]
+        }
+      }
+    }
+  ],
+  <span class="k">"connections"</span>: {
+    <span class="s">"Manual Trigger"</span>: {                   <span class="c">// 來源節點名稱</span>
+      <span class="k">"main"</span>: [[                            <span class="c">// main[0] = 第一個輸出端口</span>
+        { <span class="k">"node"</span>: <span class="s">"Edit Fields"</span>, <span class="k">"type"</span>: <span class="s">"main"</span>, <span class="k">"index"</span>: <span class="n">0</span> }
+      ]]
+    }
+  },
+  <span class="k">"active"</span>: <span class="b">false</span>,
+  <span class="k">"settings"</span>: { <span class="k">"executionOrder"</span>: <span class="s">"v1"</span> }
+}</pre>
+</div>
+
+<div class="bk full">
+<h4><span class="dt y"></span> 常見安裝問題排除</h4>
+<table class="tbl">
+<tr><th>問題</th><th>原因</th><th>解法</th></tr>
+<tr><td>Docker 權限錯誤</td><td>n8n 容器用 user 1000 運行</td><td><code>sudo chown -R 1000:1000 /path/to/data</code></td></tr>
+<tr><td>Port 5678 被佔用</td><td>其他程式用了同一個 port</td><td>改用其他 port：<code>-p 8080:5678</code></td></tr>
+<tr><td>npm 全域安裝權限不足</td><td>macOS/Linux 權限問題</td><td>用 nvm 管理 Node.js 或修改 npm prefix</td></tr>
+<tr><td>Webhook 外部無法連入</td><td>本機沒有公開 IP</td><td>用 <code>n8n start --tunnel</code> 建立臨時公開 URL</td></tr>
+</table>
+<div class="note">更多排除方法參考：<a href="https://www.c-sharpcorner.com/article/7-common-n8n-installation-on-docker-issues-and-how-to-fix-them-fast/" target="_blank">7 Common n8n Docker Issues</a></div>
+</div>
+
+<div class="refs">
+<h4>參考文獻</h4>
+<a href="https://docs.n8n.io/hosting/installation/docker/" target="_blank">n8n Docker 安裝文件</a>
+<a href="https://docs.n8n.io/hosting/installation/npm/" target="_blank">n8n npm 安裝文件</a>
+<a href="https://docs.n8n.io/try-it-out/" target="_blank">n8n Try It Out</a>
+<a href="https://docs.n8n.io/workflows/create/" target="_blank">n8n 建立 Workflow</a>
+<a href="https://docs.n8n.io/workflows/export-import/" target="_blank">n8n 匯出匯入</a>
+</div>
+
+<div class="tb">
+<div class="br"><span class="bl">講解</span><div class="bt"><div class="bf lc" style="width:30%">1.2h</div></div></div>
+<div class="br"><span class="bl">實作</span><div class="bt"><div class="bf pr" style="width:50%">2h</div></div></div>
+<div class="br"><span class="bl">除錯</span><div class="bt"><div class="bf db" style="width:20%">0.8h</div></div></div>
+</div>
+
+</div></div></div>
+</div>
+
+<!-- ====================== CH2 ====================== -->
+<div class="ch t2" id="ch2">
+<div class="chh" onclick="T(this)"><div class="chn">02</div><div class="chm"><h3>資料流 & 觸發器</h3><p>掌握 n8n 資料結構、表達式語法、Schedule / Webhook / Form 三種觸發方式</p></div><div class="cht">4 小時</div><div class="cha">&#9660;</div></div>
+<div class="chb"><div class="chi"><div class="g2">
+
+<div class="prose">
+<h5>n8n 的資料結構：一切都是 items 陣列</h5>
+<p>這是 n8n 最重要的概念，也是初學者最容易搞混的地方：<strong>在 n8n 中，所有在節點之間傳遞的資料都是一個「陣列」（Array），陣列裡的每一個元素叫做一個「item」</strong>。</p>
+<p>每個 item 長這樣：</p>
+</div>
+
+<div class="bk full">
+<h4><span class="dt b"></span> 資料結構圖解</h4>
+<pre class="j">[                                    <span class="c">// ← 整體是一個陣列</span>
+  {                                  <span class="c">// ← 第 1 筆 item</span>
+    <span class="k">"json"</span>: {                       <span class="c">// ← 所有文字/數值資料都在 json 裡</span>
+      <span class="k">"name"</span>: <span class="s">"Alice"</span>,
+      <span class="k">"email"</span>: <span class="s">"alice@example.com"</span>
+    }
+  },
+  {                                  <span class="c">// ← 第 2 筆 item</span>
+    <span class="k">"json"</span>: {
+      <span class="k">"name"</span>: <span class="s">"Bob"</span>,
+      <span class="k">"email"</span>: <span class="s">"bob@example.com"</span>
+    }
+  }
+]</pre>
+<p style="margin-top:.5rem"><strong>關鍵規則：</strong></p>
+<ul>
+<li>資料永遠是陣列，即使只有一筆也是 <code>[{ json: {...} }]</code></li>
+<li>每個 item 的實際資料放在 <code>json</code> 這個 key 裡面</li>
+<li>如果有檔案（圖片、PDF），會放在 <code>binary</code> key 裡</li>
+<li>當一個節點輸出 3 筆 items，下一個節點就會對每一筆分別執行一次</li>
+</ul>
+<div class="note">參考：<a href="https://docs.n8n.io/data/data-structure/" target="_blank">n8n 官方 - Data Structure</a>、<a href="https://docs.n8n.io/courses/level-two/chapter-1/" target="_blank">Level Two 課程 - 資料結構</a></div>
+</div>
+
+<div class="prose">
+<h5>表達式（Expressions）：動態引用資料</h5>
+<p>表達式讓你在節點參數裡動態地引用來自前面節點的資料。語法是 <code>={{ JavaScript 表達式 }}</code>，注意開頭的 <code>=</code> 號不能省略。</p>
+</div>
+
+<div class="bk full">
+<h4><span class="dt b"></span> 表達式完整速查表</h4>
+<table class="tbl">
+<tr><th>用途</th><th>表達式</th><th>說明</th></tr>
+<tr><td>取得欄位值</td><td><code>{{ $json.name }}</code></td><td>目前 item 的 name 欄位</td></tr>
+<tr><td>巢狀取值</td><td><code>{{ $json.user.address.city }}</code></td><td>深層存取</td></tr>
+<tr><td>中文欄位</td><td><code>{{ $json['姓名'] }}</code></td><td>有特殊字元時用括號</td></tr>
+<tr><td>其他節點</td><td><code>{{ $('節點名').first().json.x }}</code></td><td>取得指定節點的資料</td></tr>
+<tr><td>所有 items</td><td><code>{{ $input.all() }}</code></td><td>取得輸入的全部 items</td></tr>
+<tr><td>目前索引</td><td><code>{{ $itemIndex }}</code></td><td>0, 1, 2...</td></tr>
+<tr><td>當前時間</td><td><code>{{ $now.toFormat('yyyy-MM-dd') }}</code></td><td>格式化日期</td></tr>
+<tr><td>條件判斷</td><td><code>{{ $json.score >= 60 ? '及格' : '不及格' }}</code></td><td>三元運算子</td></tr>
+<tr><td>預設值</td><td><code>{{ $json.name || '匿名' }}</code></td><td>如果為空就用預設值</td></tr>
+<tr><td>字串轉大寫</td><td><code>{{ $json.name.toUpperCase() }}</code></td><td>JavaScript 方法都可用</td></tr>
+<tr><td>數學運算</td><td><code>{{ $json.price * 1.05 }}</code></td><td>加稅計算</td></tr>
+<tr><td>陣列合併</td><td><code>{{ $json.tags.join(', ') }}</code></td><td>"紅, 藍, 綠"</td></tr>
+<tr><td>Workflow ID</td><td><code>{{ $workflow.id }}</code></td><td>Workflow 的唯一識別碼</td></tr>
+<tr><td>執行模式</td><td><code>{{ $execution.mode }}</code></td><td>"test" 或 "production"</td></tr>
+<tr><td>環境變數</td><td><code>{{ $env.API_KEY }}</code></td><td>需管理員啟用</td></tr>
+</table>
+<div class="warn">常見錯誤：忘記加 <code>=</code> 號。正確寫法是 <code>={{ $json.name }}</code>，不是 <code>{{ $json.name }}</code>（少了等號不會生效）。另一個常見錯誤是字串與數字搞混：<code>"5" + "3"</code> 會得到 <code>"53"</code>（字串串接），要用 <code>Number($json.price)</code> 轉換。</div>
+<div class="note">參考：<a href="https://docs.n8n.io/code/expressions/" target="_blank">n8n Expressions 文件</a>、<a href="https://n8narena.com/guides/n8n-expression-cheatsheet/" target="_blank">n8n 表達式速查表（3200+ 表達式）</a></div>
+</div>
+
+<div class="prose">
+<h5>三種觸發器</h5>
+</div>
+
+<div class="bk">
+<h4><span class="dt o"></span> Schedule Trigger 定時觸發</h4>
+<p>按照設定的排程自動執行 Workflow。Workflow 必須是啟用（Active）狀態才會自動觸發。</p>
+<p><strong>常見 Cron 排程：</strong></p>
+<table class="tbl">
+<tr><th>排程</th><th>Cron 表達式</th></tr>
+<tr><td>每 5 分鐘</td><td><code>*/5 * * * *</code></td></tr>
+<tr><td>每天早上 9 點</td><td><code>0 9 * * *</code></td></tr>
+<tr><td>每週一早上 8 點</td><td><code>0 8 * * 1</code></td></tr>
+<tr><td>工作日每小時 9-17 點</td><td><code>0 9-17 * * 1-5</code></td></tr>
+<tr><td>每月 1 號午夜</td><td><code>0 0 1 * *</code></td></tr>
+</table>
+<div class="note">Cron 格式：<code>分 時 日 月 週幾</code>。<code>*</code> = 每個、<code>*/n</code> = 每隔 n、<code>1,15</code> = 在 1 和 15。<br>參考：<a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.scheduletrigger/" target="_blank">Schedule Trigger 文件</a></div>
+</div>
+
+<div class="bk">
+<h4><span class="dt o"></span> Webhook Trigger 接收外部請求</h4>
+<p>建立一個 HTTP 端點（URL），讓外部服務可以呼叫來觸發 Workflow。</p>
+<p><strong>兩種 URL：</strong></p>
+<ul>
+<li><strong>Test URL</strong>：只在你點「Listen for test event」時有效，適合開發</li>
+<li><strong>Production URL</strong>：Workflow 啟用後永久有效，用於正式環境</li>
+</ul>
+<p><strong>支援的 HTTP 方法：</strong>GET、POST、PUT、PATCH、DELETE、HEAD</p>
+<p><strong>輸出資料包含：</strong><code>headers</code>（請求標頭）、<code>query</code>（URL 參數）、<code>body</code>（請求主體）</p>
+<div class="note">參考：<a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/" target="_blank">Webhook 文件</a></div>
+</div>
+
+<div class="bk full">
+<h4><span class="dt o"></span> Form Trigger 表單觸發</h4>
+<p>n8n 會自動幫你產生一個表單網頁，使用者填寫後觸發 Workflow。支援的欄位類型：</p>
+<table class="tbl">
+<tr><th>類型</th><th>說明</th><th>類型</th><th>說明</th></tr>
+<tr><td>Text</td><td>單行文字</td><td>Textarea</td><td>多行文字</td></tr>
+<tr><td>Number</td><td>數字</td><td>Email</td><td>Email（有驗證）</td></tr>
+<tr><td>Password</td><td>密碼遮罩</td><td>Date</td><td>日期選擇器</td></tr>
+<tr><td>Dropdown</td><td>下拉選單</td><td>Checkboxes</td><td>多選核取方塊</td></tr>
+<tr><td>File</td><td>檔案上傳</td><td>Hidden</td><td>隱藏欄位</td></tr>
+</table>
+<div class="note">參考：<a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.formtrigger/" target="_blank">Form Trigger 文件</a></div>
+</div>
+
+<div class="bk full">
+<h4><span class="dt g"></span> 實作演練</h4>
+<ol>
+<li>在 Edit Fields 節點中使用表達式：<code>={{ '你好 ' + $json.name + '，歡迎！' }}</code></li>
+<li>建立 Schedule Trigger：每 5 分鐘產生一筆含時間戳的資料</li>
+<li>建立 Webhook：用 curl 測試：<code>curl -X POST http://localhost:5678/webhook-test/ch2-demo -H "Content-Type: application/json" -d '{"name":"Alice","email":"alice@example.com"}'</code></li>
+<li>建立 Form Trigger：收集姓名 + Email，打開表單頁面填寫看看</li>
+<li>串接練習：Webhook 接收 → Edit Fields 格式化 → 查看輸出</li>
+</ol>
+</div>
+
+<div class="jb">
+<div class="jh"><span>ch2-webhook-form.json</span><a href="examples/ch2-webhook-form.json" download>下載</a></div>
+<pre class="j">{
+  <span class="k">"name"</span>: <span class="s">"Ch2 - Webhook 接收資料"</span>,
+  <span class="k">"nodes"</span>: [
+    { <span class="k">"name"</span>: <span class="s">"Webhook"</span>, <span class="k">"type"</span>: <span class="s">"n8n-nodes-base.webhook"</span>,
+      <span class="k">"parameters"</span>: { <span class="k">"path"</span>: <span class="s">"ch2-demo"</span>, <span class="k">"httpMethod"</span>: <span class="s">"POST"</span> } },
+    { <span class="k">"name"</span>: <span class="s">"格式化回應"</span>, <span class="k">"type"</span>: <span class="s">"n8n-nodes-base.set"</span>,
+      <span class="k">"parameters"</span>: { <span class="k">"assignments"</span>: [
+        { <span class="k">"name"</span>: <span class="s">"received_name"</span>,  <span class="k">"value"</span>: <span class="s">"={{ $json.body.name }}"</span> },
+        { <span class="k">"name"</span>: <span class="s">"received_email"</span>, <span class="k">"value"</span>: <span class="s">"={{ $json.body.email }}"</span> },
+        { <span class="k">"name"</span>: <span class="s">"received_at"</span>,    <span class="k">"value"</span>: <span class="s">"={{ $now.format('yyyy-MM-dd HH:mm:ss') }}"</span> }
+      ] } }
+  ],
+  <span class="k">"connections"</span>: { <span class="s">"Webhook"</span>: { <span class="k">"main"</span>: [[{ <span class="k">"node"</span>: <span class="s">"格式化回應"</span> }]] } }
+}</pre>
+</div>
+
+<div class="refs">
+<h4>參考文獻</h4>
+<a href="https://docs.n8n.io/data/data-structure/" target="_blank">n8n Data Structure</a>
+<a href="https://docs.n8n.io/code/expressions/" target="_blank">n8n Expressions</a>
+<a href="https://docs.n8n.io/data/data-mapping/" target="_blank">n8n Data Mapping</a>
+<a href="https://n8narena.com/guides/n8n-expression-cheatsheet/" target="_blank">表達式速查表</a>
+</div>
+
+<div class="tb">
+<div class="br"><span class="bl">講解</span><div class="bt"><div class="bf lc" style="width:30%">1.2h</div></div></div>
+<div class="br"><span class="bl">實作</span><div class="bt"><div class="bf pr" style="width:50%">2h</div></div></div>
+<div class="br"><span class="bl">除錯</span><div class="bt"><div class="bf db" style="width:20%">0.8h</div></div></div>
+</div>
+</div></div></div>
+</div>
+
+<!-- ====================== CH3 ====================== -->
+<div class="ch t3" id="ch3">
+<div class="chh" onclick="T(this)"><div class="chn">03</div><div class="chm"><h3>邏輯判斷 & API 串接</h3><p>IF / Switch 條件分流、REST API 基礎觀念、HTTP Request 呼叫外部 API</p></div><div class="cht">4 小時</div><div class="cha">&#9660;</div></div>
+<div class="chb"><div class="chi"><div class="g2">
+
+<div class="prose">
+<h5>什麼是 REST API？（給完全不懂的人）</h5>
+<p>想像你去一家餐廳。你不會自己走進廚房做菜，而是跟<strong>服務生</strong>點餐。服務生去廚房拿菜，然後端回來給你。<strong>API 就像那個服務生</strong>——它是應用程式之間溝通的橋樑。</p>
+<p>REST API 用 HTTP 方法來表達你想做什麼：</p>
+</div>
+
+<div class="bk full">
+<h4><span class="dt b"></span> HTTP 方法 = CRUD 操作</h4>
+<table class="tbl">
+<tr><th>HTTP 方法</th><th>動作</th><th>類比</th><th>範例</th></tr>
+<tr><td><code>GET</code></td><td>讀取</td><td>「我要看菜單」</td><td>取得使用者清單</td></tr>
+<tr><td><code>POST</code></td><td>新增</td><td>「我要點一份牛排」</td><td>建立一筆新訂單</td></tr>
+<tr><td><code>PUT / PATCH</code></td><td>修改</td><td>「牛排改七分熟」</td><td>更新使用者 email</td></tr>
+<tr><td><code>DELETE</code></td><td>刪除</td><td>「取消那份牛排」</td><td>刪除一筆訂單</td></tr>
+</table>
+<p style="margin-top:.5rem">API 回傳的資料通常是 JSON 格式——跟 n8n Workflow 的格式一樣！</p>
+<div class="note">延伸閱讀：<a href="https://www.explainthis.io/zh-hant/swe/restful-api" target="_blank">從日常生活理解 RESTful API（中文）</a></div>
+</div>
+
+<div class="bk full">
+<h4><span class="dt b"></span> HTTP 狀態碼速查</h4>
+<table class="tbl">
+<tr><th>狀態碼</th><th>意思</th><th>你該怎麼做</th></tr>
+<tr><td style="color:var(--gr)">200 OK</td><td>成功</td><td>繼續處理回傳的資料</td></tr>
+<tr><td style="color:var(--gr)">201 Created</td><td>建立成功</td><td>新資源已建立</td></tr>
+<tr><td style="color:var(--sc)">400 Bad Request</td><td>請求格式錯誤</td><td>檢查你的 JSON 或參數</td></tr>
+<tr><td style="color:var(--sc)">401 Unauthorized</td><td>身份驗證失敗</td><td>檢查 API Key / Token</td></tr>
+<tr><td style="color:var(--sc)">403 Forbidden</td><td>沒有權限</td><td>確認 API Key 的權限範圍</td></tr>
+<tr><td style="color:var(--sc)">404 Not Found</td><td>找不到資源</td><td>確認 URL 是否正確</td></tr>
+<tr><td style="color:var(--sc)">429 Too Many Requests</td><td>請求太頻繁</td><td>降低頻率，或加 Wait 節點</td></tr>
+<tr><td style="color:var(--rd)">500 Server Error</td><td>伺服器錯誤</td><td>不是你的問題，稍後重試</td></tr>
+</table>
+</div>
+
+<div class="prose">
+<h5>IF 節點：是非題分流</h5>
+<p>IF 節點把資料分成兩條路：符合條件的走 <strong>true</strong>（上路），不符合的走 <strong>false</strong>（下路）。</p>
+<p>每個條件有三個部分：<strong>左邊值</strong>（要檢查的資料）、<strong>運算子</strong>（怎麼比）、<strong>右邊值</strong>（比較對象）。可以設多個條件，用 AND（全部要符合）或 OR（任一符合即可）串接。</p>
+
+<h5>Switch 節點：選擇題分流</h5>
+<p>當分支超過兩條時，用 Switch 節點。它可以有無限多個輸出路徑，類似程式語言的 switch-case。</p>
+</div>
+
+<div class="bk full">
+<h4><span class="dt p"></span> 流程圖：訂單金額分流</h4>
+<div class="fd">
+<div class="fn">接收訂單<small>Webhook</small></div><span class="fa">&rarr;</span>
+<div class="fn">金額判斷<small>IF &ge; 1000</small></div><span class="fa">&rarr;</span>
+<div class="fbr">
+  <div><div class="flb">true</div><div class="fn" style="border-color:var(--gr)">VIP 訂單<small style="color:var(--gr)">優先處理</small></div></div>
+  <div><div class="flb">false</div><div class="fn" style="border-color:var(--sc)">一般訂單<small style="color:var(--sc)">標準處理</small></div></div>
+</div>
+</div>
+</div>
+
+<div class="bk full">
+<h4><span class="dt y"></span> 免費 API 練習清單（不需 API Key）</h4>
+<table class="tbl">
+<tr><th>API</th><th>URL</th><th>說明</th></tr>
+<tr><td>匯率</td><td><code>https://open.er-api.com/v6/latest/USD</code></td><td>即時匯率（含 TWD、JPY）</td></tr>
+<tr><td>天氣</td><td><code>https://wttr.in/Taipei?format=j1</code></td><td>台北天氣 JSON</td></tr>
+<tr><td>笑話</td><td><code>https://v2.jokeapi.dev/joke/Any?safe-mode</code></td><td>隨機笑話</td></tr>
+<tr><td>狗圖</td><td><code>https://dog.ceo/api/breeds/image/random</code></td><td>隨機狗狗照片</td></tr>
+<tr><td>假資料</td><td><code>https://jsonplaceholder.typicode.com/posts</code></td><td>測試用假 REST API</td></tr>
+<tr><td>公開 IP</td><td><code>https://api.ipify.org?format=json</code></td><td>取得你的公開 IP</td></tr>
+</table>
+</div>
+
+<div class="bk full">
+<h4><span class="dt g"></span> 實作演練</h4>
+<ol>
+<li>Webhook 接收訂單 → IF 判斷金額 &ge; 1000 → VIP / 一般分流</li>
+<li>Manual Trigger → HTTP Request GET 匯率 API → Edit Fields 取出 TWD 匯率</li>
+<li>Switch 節點：依訂單類型（食品/服飾/3C）分流到不同路徑</li>
+<li>組合練習：定時觸發 → API 取匯率 → IF 判斷漲跌 → 輸出結果</li>
+</ol>
+</div>
+
+<div class="jb">
+<div class="jh"><span>ch3-if-condition.json — IF 條件分流</span><a href="examples/ch3-if-condition.json" download>下載</a></div>
+<pre class="j"><span class="c">// connections 中 IF 節點的分支結構：</span>
+<span class="s">"金額判斷"</span>: {
+  <span class="k">"main"</span>: [
+    [{ <span class="k">"node"</span>: <span class="s">"VIP 訂單"</span> }],   <span class="c">// index 0 = true 路徑</span>
+    [{ <span class="k">"node"</span>: <span class="s">"一般訂單"</span> }]    <span class="c">// index 1 = false 路徑</span>
+  ]
+}</pre>
+</div>
+
+<div class="jb">
+<div class="jh"><span>ch3-http-request.json — HTTP Request 呼叫 API</span><a href="examples/ch3-http-request.json" download>下載</a></div>
+<pre class="j">{
+  <span class="k">"name"</span>: <span class="s">"取得匯率"</span>,
+  <span class="k">"type"</span>: <span class="s">"n8n-nodes-base.httpRequest"</span>,
+  <span class="k">"parameters"</span>: {
+    <span class="k">"url"</span>: <span class="s">"https://api.exchangerate-api.com/v4/latest/USD"</span>,
+    <span class="k">"method"</span>: <span class="s">"GET"</span>
+  }
+}
+<span class="c">// 回傳的 $json.rates.TWD 就是美元對台幣匯率</span></pre>
+</div>
+
+<div class="refs">
+<h4>參考文獻</h4>
+<a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.if/" target="_blank">IF 節點文件</a>
+<a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.switch/" target="_blank">Switch 節點文件</a>
+<a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.httprequest/" target="_blank">HTTP Request 文件</a>
+<a href="https://ryanandmattdatascience.com/n8n-if-node/" target="_blank">IF Node 完整指南（11 範例）</a>
+</div>
+
+<div class="tb">
+<div class="br"><span class="bl">講解</span><div class="bt"><div class="bf lc" style="width:25%">1h</div></div></div>
+<div class="br"><span class="bl">實作</span><div class="bt"><div class="bf pr" style="width:55%">2.2h</div></div></div>
+<div class="br"><span class="bl">除錯</span><div class="bt"><div class="bf db" style="width:20%">0.8h</div></div></div>
+</div>
+</div></div></div>
+</div>
+
+<!-- ====================== CH4 ====================== -->
+<div class="ch t4" id="ch4">
+<div class="chh" onclick="T(this)"><div class="chn">04</div><div class="chm"><h3>LINE 推播整合</h3><p>LINE Messaging API 設定、推播通知、每日天氣自動推播系統</p></div><div class="cht">4 小時</div><div class="cha">&#9660;</div></div>
+<div class="chb"><div class="chi"><div class="g2">
+
+<div class="bk full">
+<h4><span class="dt r"></span> 重要公告：LINE Notify 已於 2025/3/31 停止服務</h4>
+<div class="warn">LINE Notify 在 2025 年 3 月 31 日正式終止服務。所有 Token 失效，API 不再回應。本課程使用 <strong>LINE Messaging API</strong> 作為替代方案。它功能更強大，支援雙向互動，免費方案每月 200 則推播。<br>參考：<a href="https://ke2b.com/en/line-notify-closing-alt/" target="_blank">LINE Notify 停止服務替代方案比較</a></div>
+</div>
+
+<div class="prose">
+<h5>LINE Messaging API 完整設定（從零開始）</h5>
+<p>LINE Messaging API 是 LINE 官方提供的 API，讓你的程式可以主動發訊息給 LINE 使用者。以下是完整的設定步驟：</p>
+</div>
+
+<div class="bk full">
+<h4><span class="dt o"></span> Step 1：建立 LINE 官方帳號</h4>
+<ol>
+<li>前往 <a href="https://manager.line.biz/" target="_blank">LINE Official Account Manager</a></li>
+<li>點擊「建立帳號」，用你的 LINE 帳號登入</li>
+<li>填寫帳號名稱（如「n8n 課程通知」）、選擇業種</li>
+<li>完成後會進入管理後台</li>
+</ol>
+</div>
+
+<div class="bk full">
+<h4><span class="dt o"></span> Step 2：啟用 Messaging API</h4>
+<ol>
+<li>在管理後台左側選單，點「設定」→「Messaging API」</li>
+<li>點「啟用 Messaging API」</li>
+<li>第一次使用會要你到 LINE Developers Console 註冊開發者資料</li>
+<li>選擇或建立一個 <strong>Provider</strong>（注意：建立後無法更改）</li>
+<li>確認後，你的官方帳號就會自動連結一個 Messaging API Channel</li>
+</ol>
+<div class="warn">注意：2024 年 9 月起，你<strong>不能</strong>直接在 LINE Developers Console 建立 Channel。必須先建立官方帳號，再從官方帳號管理後台啟用 Messaging API。</div>
+</div>
+
+<div class="bk full">
+<h4><span class="dt o"></span> Step 3：取得 Channel Access Token 和 User ID</h4>
+<ol>
+<li>前往 <a href="https://developers.line.biz/console/" target="_blank">LINE Developers Console</a></li>
+<li>選擇你的 Provider → Messaging API Channel</li>
+<li>在「Messaging API」分頁最下方，點「Issue」產生 <strong>Channel Access Token</strong>（長期有效）</li>
+<li>在「Basic Settings」分頁最下方找到 <strong>Your user ID</strong>（以 U 開頭的字串）</li>
+<li>這兩個值就是你在 n8n 中需要填入的憑證</li>
+</ol>
+</div>
+
+<div class="bk full">
+<h4><span class="dt b"></span> LINE Messaging API 規格</h4>
+<table class="tbl">
+<tr><th>項目</th><th>LINE Messaging API</th></tr>
+<tr><td>Push Message URL</td><td><code>https://api.line.me/v2/bot/message/push</code></td></tr>
+<tr><td>Header</td><td><code>Authorization: Bearer {Channel Access Token}</code><br><code>Content-Type: application/json</code></td></tr>
+<tr><td>Body 格式</td><td>JSON（不是 form-data）</td></tr>
+<tr><td>每則最多訊息</td><td>5 個 message 物件</td></tr>
+<tr><td>支援訊息類型</td><td>text、image、video、audio、location、sticker、Flex Message</td></tr>
+<tr><td>免費額度</td><td>輕用量方案：200 則/月（Reply 訊息不計費且無限制）</td></tr>
+<tr><td>必要條件</td><td>使用者必須先加你的官方帳號為好友</td></tr>
+</table>
+<div class="note">參考：<a href="https://developers.line.biz/en/docs/messaging-api/sending-messages/" target="_blank">LINE Messaging API 文件</a></div>
+</div>
+
+<div class="bk full">
+<h4><span class="dt p"></span> 流程圖：每日天氣推播</h4>
+<div class="fd">
+<div class="fn">每日 8:00<small>Schedule</small></div><span class="fa">&rarr;</span>
+<div class="fn">取得天氣<small>HTTP GET wttr.in</small></div><span class="fa">&rarr;</span>
+<div class="fn">組合訊息<small>Code Node</small></div><span class="fa">&rarr;</span>
+<div class="fn">LINE 推播<small>HTTP POST line.me</small></div>
+</div>
+</div>
+
+<div class="bk full">
+<h4><span class="dt g"></span> 實作演練</h4>
+<ol>
+<li>建立 LINE 官方帳號 + 啟用 Messaging API + 取得 Token 和 User ID</li>
+<li>第一則推播：Manual Trigger → HTTP Request POST → 手機收到「Hello from n8n!」</li>
+<li>動態推播：Webhook 接收 → IF 判斷 → 組合訊息 → LINE 推播</li>
+<li>天氣系統：Schedule（每日 8:00）→ HTTP GET wttr.in → Code 組合 → LINE 推播</li>
+</ol>
+</div>
+
+<div class="jb">
+<div class="jh"><span>ch4-line-push.json — 基本 LINE 推播</span><a href="examples/ch4-line-push.json" download>下載</a></div>
+<pre class="j">{
+  <span class="k">"name"</span>: <span class="s">"LINE Push Message"</span>,
+  <span class="k">"type"</span>: <span class="s">"n8n-nodes-base.httpRequest"</span>,
+  <span class="k">"parameters"</span>: {
+    <span class="k">"url"</span>: <span class="s">"https://api.line.me/v2/bot/message/push"</span>,
+    <span class="k">"method"</span>: <span class="s">"POST"</span>,
+    <span class="k">"sendHeaders"</span>: <span class="b">true</span>,
+    <span class="k">"headerParameters"</span>: [
+      { <span class="k">"name"</span>: <span class="s">"Authorization"</span>, <span class="k">"value"</span>: <span class="s">"Bearer YOUR_TOKEN"</span> },
+      { <span class="k">"name"</span>: <span class="s">"Content-Type"</span>,  <span class="k">"value"</span>: <span class="s">"application/json"</span> }
+    ],
+    <span class="k">"contentType"</span>: <span class="s">"raw"</span>,
+    <span class="k">"body"</span>: <span class="s">"{\"to\":\"YOUR_USER_ID\",\"messages\":[{\"type\":\"text\",\"text\":\"Hello from n8n!\"}]}"</span>
+  }
+}</pre>
+</div>
+
+<div class="jb">
+<div class="jh"><span>ch4-weather-line-messaging.json — 每日天氣推播</span><a href="examples/ch4-weather-line-messaging.json" download>下載</a></div>
+<pre class="j"><span class="c">// wttr.in 回傳的 JSON 結構：</span>
+{
+  <span class="k">"current_condition"</span>: [{
+    <span class="k">"temp_C"</span>: <span class="s">"24"</span>,           <span class="c">// 目前溫度</span>
+    <span class="k">"FeelsLikeC"</span>: <span class="s">"26"</span>,       <span class="c">// 體感溫度</span>
+    <span class="k">"humidity"</span>: <span class="s">"83"</span>,         <span class="c">// 濕度</span>
+    <span class="k">"weatherDesc"</span>: [{ <span class="k">"value"</span>: <span class="s">"Partly cloudy"</span> }],
+    <span class="k">"windspeedKmph"</span>: <span class="s">"4"</span>      <span class="c">// 風速</span>
+  }],
+  <span class="k">"weather"</span>: [{
+    <span class="k">"astronomy"</span>: [{
+      <span class="k">"sunrise"</span>: <span class="s">"05:47 AM"</span>,
+      <span class="k">"sunset"</span>: <span class="s">"06:10 PM"</span>
+    }]
+  }]
+}
+
+<span class="c">// Code 節點組合訊息：</span>
+const current = $input.first().json.current_condition[<span class="n">0</span>];
+const message = `台北今日天氣
+溫度：${current.temp_C}°C（體感 ${current.FeelsLikeC}°C）
+濕度：${current.humidity}%
+天氣：${current.weatherDesc[<span class="n">0</span>].value}`;
+return [{ json: { message } }];</pre>
+</div>
+
+<div class="refs">
+<h4>參考文獻</h4>
+<a href="https://developers.line.biz/en/docs/messaging-api/getting-started/" target="_blank">LINE Messaging API 入門</a>
+<a href="https://developers.line.biz/en/reference/messaging-api/" target="_blank">LINE API Reference</a>
+<a href="https://www.darrelltw.com/n8n-line-message-api/" target="_blank">n8n 串接 LINE Messaging API（中文）</a>
+<a href="https://github.com/chubin/wttr.in" target="_blank">wttr.in 天氣 API 文件</a>
+</div>
+
+<div class="tb">
+<div class="br"><span class="bl">講解</span><div class="bt"><div class="bf lc" style="width:25%">1h</div></div></div>
+<div class="br"><span class="bl">實作</span><div class="bt"><div class="bf pr" style="width:55%">2.2h</div></div></div>
+<div class="br"><span class="bl">除錯</span><div class="bt"><div class="bf db" style="width:20%">0.8h</div></div></div>
+</div>
+</div></div></div>
+</div>
+
+<!-- ====================== CH5 ====================== -->
+<div class="ch t5" id="ch5">
+<div class="chh" onclick="T(this)"><div class="chn">05</div><div class="chm"><h3>n8n-as-code 代碼化管理</h3><p>CLI 安裝、JSON 轉 TypeScript、Git 版控、AI Skills 搜尋系統</p></div><div class="cht">4 小時</div><div class="cha">&#9660;</div></div>
+<div class="chb"><div class="chi"><div class="g2">
+
+<div class="prose">
+<h5>為什麼要把 Workflow 變成程式碼？</h5>
+<p>到目前為止，我們都在 n8n 的圖形介面裡操作。但當你的 Workflow 越來越多、越來越複雜，或需要跟團隊協作時，純圖形操作就會遇到問題：</p>
+<ul>
+<li><strong>沒有版本控制</strong>：不小心改壞了找不回來</li>
+<li><strong>JSON 不好讀</strong>：幾百行的 JSON 很難一眼看懂修改了什麼</li>
+<li><strong>無法 Code Review</strong>：團隊成員無法審查彼此的修改</li>
+<li><strong>沒有驗證機制</strong>：匯入前無法確認 Workflow 是否合法</li>
+</ul>
+<p><strong>n8n-as-code</strong> 解決了這些問題。它是一個開源工具，把 n8n 的 JSON Workflow 轉換成可讀性更高的 TypeScript 格式，然後用 Git 來做版本控制。</p>
+</div>
+
+<div class="bk full">
+<h4><span class="dt b"></span> n8n-as-code 四大元件</h4>
+<table class="tbl">
+<tr><th>元件</th><th>用途</th></tr>
+<tr><td><code>n8nac</code> CLI</td><td>核心命令列工具：pull / push / convert / list</td></tr>
+<tr><td><code>@n8n-as-code/transformer</code></td><td>JSON ↔ TypeScript 雙向轉換器</td></tr>
+<tr><td><code>@n8n-as-code/skills</code></td><td>AI 知識庫：537 個節點 schema + 7,702 個社群模板，本地搜尋</td></tr>
+<tr><td>VS Code Extension</td><td>視覺化介面 + 側邊欄 + 嵌入式畫布</td></tr>
+</table>
+</div>
+
+<div class="bk full">
+<h4><span class="dt o"></span> 設定步驟</h4>
+<ol>
+<li><strong>啟用 n8n API</strong>：在 n8n 的 Settings → API，點「Create an API Key」，複製 key</li>
+<li><strong>初始化</strong>：<code>npx --yes n8nac init</code>，依序輸入 n8n URL 和 API Key</li>
+<li><strong>選擇專案</strong>：選擇要同步的 n8n 專案，設定本地同步資料夾</li>
+</ol>
+</div>
+
+<div class="bk full">
+<h4><span class="dt y"></span> CLI 指令完整速查表</h4>
+<table class="tbl">
+<tr><th>指令</th><th>功能</th><th>範例</th></tr>
+<tr><td><code>n8nac init</code></td><td>初始化，連接 n8n</td><td><code>npx n8nac init</code></td></tr>
+<tr><td><code>n8nac list</code></td><td>列出所有 Workflow 及同步狀態</td><td><code>n8nac list --search "slack"</code></td></tr>
+<tr><td><code>n8nac pull &lt;id&gt;</code></td><td>下載遠端 Workflow</td><td><code>n8nac pull abc123</code></td></tr>
+<tr><td><code>n8nac push &lt;file&gt;</code></td><td>推送本地修改到 n8n</td><td><code>n8nac push workflow.ts</code></td></tr>
+<tr><td><code>n8nac convert</code></td><td>JSON ↔ TypeScript 轉換</td><td><code>n8nac convert file.json</code></td></tr>
+<tr><td><code>n8nac skills search</code></td><td>搜尋節點和模板</td><td><code>n8nac skills search "line"</code></td></tr>
+<tr><td><code>n8nac skills node-info</code></td><td>查看節點完整 schema</td><td><code>n8nac skills node-info httpRequest</code></td></tr>
+<tr><td><code>n8nac skills validate</code></td><td>驗證 Workflow 結構</td><td><code>n8nac skills validate file.json</code></td></tr>
+<tr><td><code>n8nac skills examples search</code></td><td>搜尋 7,702 個社群模板</td><td><code>n8nac skills examples search "AI"</code></td></tr>
+</table>
+</div>
+
+<div class="bk full">
+<h4><span class="dt b"></span> JSON → TypeScript 對照範例</h4>
+<pre class="j"><span class="c">// ===== 原始 JSON =====</span>
+{ <span class="k">"name"</span>: <span class="s">"Slack Notifier"</span>, <span class="k">"active"</span>: <span class="b">true</span>,
+  <span class="k">"nodes"</span>: [
+    { <span class="k">"name"</span>: <span class="s">"Webhook"</span>, <span class="k">"type"</span>: <span class="s">"n8n-nodes-base.webhook"</span>,
+      <span class="k">"parameters"</span>: { <span class="k">"path"</span>: <span class="s">"/notify"</span>, <span class="k">"method"</span>: <span class="s">"POST"</span> } },
+    { <span class="k">"name"</span>: <span class="s">"Send Slack"</span>, <span class="k">"type"</span>: <span class="s">"n8n-nodes-base.slack"</span>,
+      <span class="k">"parameters"</span>: { <span class="k">"channel"</span>: <span class="s">"#alerts"</span>, <span class="k">"text"</span>: <span class="s">"={{ $json.message }}"</span> } }
+  ],
+  <span class="k">"connections"</span>: { <span class="s">"Webhook"</span>: { <span class="k">"main"</span>: [[{ <span class="k">"node"</span>: <span class="s">"Send Slack"</span> }]] } }
+}
+
+<span class="c">// ===== 轉換後 TypeScript =====</span>
+import { workflow, node, links } from <span class="s">'@n8n-as-code/transformer'</span>;
+
+@workflow({ name: <span class="s">'Slack Notifier'</span>, active: <span class="b">true</span> })
+export class SlackNotifierWorkflow {
+
+  @node({ name: <span class="s">'Webhook'</span>, type: <span class="s">'n8n-nodes-base.webhook'</span> })
+  Webhook = { path: <span class="s">'/notify'</span>, method: <span class="s">'POST'</span> };
+
+  @node({ name: <span class="s">'Send Slack'</span>, type: <span class="s">'n8n-nodes-base.slack'</span> })
+  SendSlack = { channel: <span class="s">'#alerts'</span>, text: <span class="s">'={{ $json.message }}'</span> };
+
+  @links()
+  routing() { this.Webhook.out(<span class="n">0</span>).to(this.SendSlack.in(<span class="n">0</span>)); }
+}</pre>
+<p style="margin-top:.5rem">TypeScript 版本更容易閱讀、Git diff 更乾淨、AI 更容易理解和修改。</p>
+</div>
+
+<div class="bk full">
+<h4><span class="dt g"></span> 實作演練</h4>
+<ol>
+<li>在 n8n 啟用 API 並取得 API Key</li>
+<li><code>npx n8nac init</code> 連接你的 n8n instance</li>
+<li><code>n8nac list</code> 看看有哪些 Workflow</li>
+<li>pull 第四堂的天氣推播 Workflow，觀察 TypeScript 結構</li>
+<li>修改 TypeScript（改城市為高雄）→ push 回 n8n → 確認生效</li>
+<li><code>git init</code> → <code>git add .</code> → <code>git commit</code> → 修改 → <code>git diff</code></li>
+<li><code>n8nac skills search "天氣"</code> 搜尋相關節點和模板</li>
+</ol>
+</div>
+
+<div class="refs">
+<h4>參考文獻</h4>
+<a href="https://github.com/EtienneLescot/n8n-as-code" target="_blank">n8n-as-code GitHub</a>
+<a href="https://n8nascode.dev/" target="_blank">n8n-as-code 官方文件</a>
+<a href="https://docs.n8n.io/api/" target="_blank">n8n REST API 文件</a>
+<a href="https://docs.n8n.io/source-control-environments/" target="_blank">n8n 版本控制</a>
+</div>
+
+<div class="tb">
+<div class="br"><span class="bl">講解</span><div class="bt"><div class="bf lc" style="width:30%">1.2h</div></div></div>
+<div class="br"><span class="bl">實作</span><div class="bt"><div class="bf pr" style="width:45%">1.8h</div></div></div>
+<div class="br"><span class="bl">除錯</span><div class="bt"><div class="bf db" style="width:25%">1h</div></div></div>
+</div>
+</div></div></div>
+</div>
+
+<!-- ====================== CH6 ====================== -->
+<div class="ch t6" id="ch6">
+<div class="chh" onclick="T(this)"><div class="chn">06</div><div class="chm"><h3>期末專題：表單報名自動通知系統</h3><p>整合六堂所學，獨立完成一個端到端的自動化系統並用 Git 版控</p></div><div class="cht">4 小時</div><div class="cha">&#9660;</div></div>
+<div class="chb"><div class="chi"><div class="g2">
+
+<div class="prose">
+<h5>專題目標</h5>
+<p>建立一個<strong>課程報名自動通知系統</strong>：使用者在表單上填寫報名資料，系統自動驗證欄位、組合通知訊息、透過 LINE Messaging API 推播到你的手機。最後將 Workflow 轉為 TypeScript 並用 Git 管理。</p>
+<p>這個專題會用到前五堂學的所有技能：Form Trigger（Ch2）、IF 條件判斷（Ch3）、HTTP Request + LINE API（Ch4）、n8n-as-code（Ch5）。</p>
+</div>
+
+<div class="bk">
+<h4><span class="dt o"></span> 專題需求規格</h4>
+<ol>
+<li>Form Trigger 建立報名表（姓名、Email、課程）</li>
+<li>IF 節點驗證必填欄位</li>
+<li>Code 節點組合 LINE 訊息</li>
+<li>HTTP Request 呼叫 LINE Push API</li>
+<li>false 路徑輸出錯誤訊息</li>
+<li>匯出 JSON → 轉 TypeScript → Git commit</li>
+</ol>
+</div>
+
+<div class="bk">
+<h4><span class="dt g"></span> 時間分配</h4>
+<ul>
+<li>需求說明 & 架構規劃：30 分鐘</li>
+<li>Phase 1：建立完整 Workflow（1h）</li>
+<li>Phase 2：測試所有路徑（30min）</li>
+<li>Phase 3：n8nac convert + Git（30min）</li>
+<li>除錯 & 互助：45 分鐘</li>
+<li>成果發表 & 回饋：45 分鐘</li>
+</ul>
+</div>
+
+<div class="bk full">
+<h4><span class="dt p"></span> 完整流程圖</h4>
+<div class="fd">
+<div class="fn">報名表單<small>Form Trigger</small></div><span class="fa">&rarr;</span>
+<div class="fn">欄位驗證<small>IF 節點</small></div><span class="fa">&rarr;</span>
+<div class="fbr">
+  <div><div class="flb">true</div><div class="fn" style="border-color:var(--gr)">組合訊息<small style="color:var(--gr)">Code</small></div></div>
+  <div><div class="flb">false</div><div class="fn" style="border-color:var(--sc)">錯誤處理<small style="color:var(--sc)">Set</small></div></div>
+</div>
+<span class="fa">&rarr;</span>
+<div class="fn">LINE 推播<small>HTTP POST</small></div>
+</div>
+</div>
+
+<div class="bk full">
+<h4><span class="dt b"></span> 驗收標準</h4>
+<ul>
+<li>表單可正常顯示並收集資料</li>
+<li>填寫完整資料 → LINE 收到格式正確的通知訊息</li>
+<li>欄位缺漏 → 走 false 路徑並輸出錯誤資訊</li>
+<li>Workflow 已轉為 TypeScript 並 commit 到 Git repo</li>
+<li>能向同學說明每個節點的作用及 connections 的分支結構</li>
+</ul>
+</div>
+
+<div class="jb">
+<div class="jh"><span>ch6-final-project.json — 期末專題完整範例</span><a href="examples/ch6-final-project.json" download>下載</a></div>
+<pre class="j">{
+  <span class="k">"name"</span>: <span class="s">"Ch6 - 期末專題"</span>,
+  <span class="k">"nodes"</span>: [
+    {
+      <span class="k">"name"</span>: <span class="s">"報名表單"</span>,
+      <span class="k">"type"</span>: <span class="s">"n8n-nodes-base.formTrigger"</span>,
+      <span class="k">"parameters"</span>: {
+        <span class="k">"formTitle"</span>: <span class="s">"課程報名表"</span>,
+        <span class="k">"formFields"</span>: [
+          { <span class="k">"fieldLabel"</span>: <span class="s">"姓名"</span>, <span class="k">"fieldType"</span>: <span class="s">"text"</span>, <span class="k">"requiredField"</span>: <span class="b">true</span> },
+          { <span class="k">"fieldLabel"</span>: <span class="s">"Email"</span>, <span class="k">"fieldType"</span>: <span class="s">"email"</span>, <span class="k">"requiredField"</span>: <span class="b">true</span> },
+          { <span class="k">"fieldLabel"</span>: <span class="s">"報名課程"</span>, <span class="k">"fieldType"</span>: <span class="s">"dropdown"</span>,
+            <span class="k">"fieldOptions"</span>: [<span class="s">"n8n 基礎班"</span>, <span class="s">"n8n 進階班"</span>, <span class="s">"n8n + AI 班"</span>] }
+        ]
+      }
+    },
+    { <span class="k">"name"</span>: <span class="s">"檢查必填欄位"</span>, <span class="k">"type"</span>: <span class="s">"n8n-nodes-base.if"</span>,
+      <span class="k">"parameters"</span>: { <span class="k">"conditions"</span>: [
+        { <span class="k">"leftValue"</span>: <span class="s">"={{ $json['姓名'] }}"</span>, <span class="k">"operator"</span>: <span class="s">"isNotEmpty"</span> },
+        { <span class="k">"leftValue"</span>: <span class="s">"={{ $json['Email'] }}"</span>, <span class="k">"operator"</span>: <span class="s">"isNotEmpty"</span> }
+      ] } },
+    { <span class="k">"name"</span>: <span class="s">"組合訊息"</span>, <span class="k">"type"</span>: <span class="s">"n8n-nodes-base.code"</span> },
+    { <span class="k">"name"</span>: <span class="s">"LINE 推播"</span>, <span class="k">"type"</span>: <span class="s">"n8n-nodes-base.httpRequest"</span>,
+      <span class="k">"parameters"</span>: {
+        <span class="k">"url"</span>: <span class="s">"https://api.line.me/v2/bot/message/push"</span>,
+        <span class="k">"method"</span>: <span class="s">"POST"</span>,
+        <span class="k">"contentType"</span>: <span class="s">"application/json"</span>
+      } },
+    { <span class="k">"name"</span>: <span class="s">"欄位不完整"</span>, <span class="k">"type"</span>: <span class="s">"n8n-nodes-base.set"</span> }
+  ],
+  <span class="k">"connections"</span>: {
+    <span class="s">"報名表單"</span>:     { <span class="k">"main"</span>: [[{ <span class="k">"node"</span>: <span class="s">"檢查必填欄位"</span> }]] },
+    <span class="s">"檢查必填欄位"</span>: { <span class="k">"main"</span>: [
+      [{ <span class="k">"node"</span>: <span class="s">"組合訊息"</span> }],       <span class="c">// true → 推播</span>
+      [{ <span class="k">"node"</span>: <span class="s">"欄位不完整"</span> }]     <span class="c">// false → 錯誤</span>
+    ] },
+    <span class="s">"組合訊息"</span>:     { <span class="k">"main"</span>: [[{ <span class="k">"node"</span>: <span class="s">"LINE 推播"</span> }]] }
+  }
+}</pre>
+</div>
+
+<div class="tb">
+<div class="br"><span class="bl">講解</span><div class="bt"><div class="bf lc" style="width:12%">0.5h</div></div></div>
+<div class="br"><span class="bl">實作</span><div class="bt"><div class="bf pr" style="width:63%">2.5h</div></div></div>
+<div class="br"><span class="bl">除錯</span><div class="bt"><div class="bf db" style="width:25%">1h</div></div></div>
+</div>
+</div></div></div>
+</div>
+
+</section>
+
+<!-- FINAL -->
+<section class="sec" id="final">
+<div class="fc">
+  <h2>課程總覽</h2>
+  <p class="sub">6 堂課 / 24 小時 / 9 個 JSON 範例 / 1 個完整專題</p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;max-width:550px;margin:1.5rem auto;text-align:center">
+    <div class="bk"><h4><span class="dt o"></span>Ch1-2</h4><p style="font-size:.8rem">基礎篇<br>環境 + 資料流</p></div>
+    <div class="bk"><h4><span class="dt g"></span>Ch3-4</h4><p style="font-size:.8rem">應用篇<br>API + LINE</p></div>
+    <div class="bk"><h4><span class="dt p"></span>Ch5-6</h4><p style="font-size:.8rem">進階篇<br>代碼化 + 專題</p></div>
+  </div>
+  <p style="color:var(--tx3);font-size:.8rem;margin-top:1rem">所有範例 JSON 可直接匯入 n8n 使用 / 完整檔案在 <code>examples/</code> 資料夾<br>LINE 推播已更新為 Messaging API（LINE Notify 已於 2025/3/31 終止服務）</p>
+</div>
+</section>
+
+<footer>n8n-as-code 初學者完全教學手冊 v3.0 — 2026</footer>
+
+<script>function T(e){e.closest('.ch').classList.toggle('open')}</script>
+</body>
+</html>

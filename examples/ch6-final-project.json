@@ -1,0 +1,158 @@
+{
+  "name": "Ch6 - 期末專題：表單報名自動通知（LINE Messaging API）",
+  "nodes": [
+    {
+      "id": "form-001",
+      "name": "報名表單",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [250, 300],
+      "webhookId": "demo-form-final",
+      "parameters": {
+        "formTitle": "課程報名表",
+        "formDescription": "請填寫以下資料完成報名",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "姓名",
+              "fieldType": "text",
+              "requiredField": true,
+              "placeholder": "請輸入您的姓名"
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true,
+              "placeholder": "your@email.com"
+            },
+            {
+              "fieldLabel": "電話",
+              "fieldType": "text",
+              "requiredField": false,
+              "placeholder": "09xx-xxx-xxx"
+            },
+            {
+              "fieldLabel": "報名課程",
+              "fieldType": "dropdown",
+              "requiredField": true,
+              "fieldOptions": {
+                "values": [
+                  { "option": "n8n 基礎班" },
+                  { "option": "n8n 進階班" },
+                  { "option": "n8n + AI 整合班" }
+                ]
+              }
+            }
+          ]
+        },
+        "respondWith": "text",
+        "responseText": "報名成功！我們將會以 LINE 通知您後續資訊。"
+      }
+    },
+    {
+      "id": "if-form",
+      "name": "檢查必填欄位",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [490, 300],
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            {
+              "id": "cond-name",
+              "leftValue": "={{ $json['姓名'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty"
+              }
+            },
+            {
+              "id": "cond-email",
+              "leftValue": "={{ $json['Email'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "code-msg",
+      "name": "組合通知訊息",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 200],
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst now = new Date();\nconst timeStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;\n\nconst message = `新報名通知！\n姓名：${data['姓名']}\nEmail：${data['Email']}\n課程：${data['報名課程']}\n時間：${timeStr}`;\n\nreturn [{ json: { message } }];"
+      }
+    },
+    {
+      "id": "http-line-final",
+      "name": "LINE 推播通知",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [950, 200],
+      "parameters": {
+        "url": "https://api.line.me/v2/bot/message/push",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_CHANNEL_ACCESS_TOKEN"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "body": "={{ JSON.stringify({ to: 'YOUR_LINE_USER_ID', messages: [{ type: 'text', text: $json.message }] }) }}"
+      }
+    },
+    {
+      "id": "set-error",
+      "name": "欄位不完整",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [720, 420],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "field-1",
+              "name": "error",
+              "value": "報名資料不完整，請檢查必填欄位",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "報名表單": {
+      "main": [[ { "node": "檢查必填欄位", "type": "main", "index": 0 } ]]
+    },
+    "檢查必填欄位": {
+      "main": [
+        [ { "node": "組合通知訊息", "type": "main", "index": 0 } ],
+        [ { "node": "欄位不完整", "type": "main", "index": 0 } ]
+      ]
+    },
+    "組合通知訊息": {
+      "main": [[ { "node": "LINE 推播通知", "type": "main", "index": 0 } ]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" }
+}
