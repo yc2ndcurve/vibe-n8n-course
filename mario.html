@@ -393,7 +393,7 @@ body {
 .level {
   flex-shrink: 0;
   width: 100vw;
-  min-width: 1100px;
+  min-width: 0;
   min-height: calc(100vh - 72px);
   position: relative;
   overflow-x: hidden;
@@ -873,7 +873,7 @@ body {
 .title-screen {
   flex-shrink: 0;
   width: 100vw;
-  min-width: 1100px;
+  min-width: 0;
   height: calc(100vh - 72px);
   scroll-margin-top: 72px;
   display: flex;
@@ -1146,6 +1146,227 @@ body {
 .dd-red .dropdown-body { background: #1f0a0a; }
 .dd-red .dropdown-inner { color: #f0c0c0; }
 .dd-red .dropdown-inner li::before { color: #ff8080; }
+
+/* ============================================================
+   RWD — Responsive Web Design
+   手機/平板自適應，保持 SEO/AEO/GEO 完整
+============================================================ */
+
+/* --- Tablet (768px 以下) --- */
+@media (max-width: 768px) {
+  /* 改為垂直捲動 */
+  body { overflow-x: hidden; overflow-y: auto; }
+  .world { flex-direction: column; overflow-x: hidden; }
+  .level, .title-screen { width: 100vw; min-width: unset; }
+  .river { height: 40px; }
+
+  /* HUD 縮小 */
+  .hud { padding: 8px 12px; font-size: 12px; }
+  .hud-label { font-size: 9px; }
+  .hud-title { font-size: 14px; }
+  .world { padding-top: 50px; }
+  .level { min-height: auto; scroll-margin-top: 50px; }
+  .title-screen { height: auto; min-height: 100vh; scroll-margin-top: 50px; padding: 20px; }
+
+  /* Sky padding */
+  .level .sky { padding: 20px 16px 16px; }
+
+  /* Level header 垂直排列 */
+  .lvl-header { flex-direction: column; gap: 10px; align-items: flex-start; }
+  .lvl-num { font-size: 32px; }
+  .lvl-title-box { padding: 12px 16px; }
+  .lvl-title-box h2 { font-size: 14px; }
+  .lvl-title-box p { font-size: 14px; }
+  .lvl-time { font-size: 14px; padding: 8px 14px; }
+  .lvl-time small { font-size: 9px; }
+
+  /* Content grid 單欄 */
+  .content-area { grid-template-columns: 1fr; gap: 12px; }
+
+  /* Block 內容縮小 */
+  .q-block, .brick-block { padding: 14px 16px; }
+  .q-block h4, .brick-block h4, .pipe-block h4 { font-size: 10px; margin-bottom: 8px; }
+  .q-block li, .brick-block li, .pipe-block li { font-size: 15px; line-height: 1.6; padding: 4px 0; }
+  .q-block::before { font-size: 18px; top: -12px; right: 10px; }
+  .pipe-block { padding: 16px; }
+  .pipe-block p { font-size: 15px; }
+  .pipe-block .note, .pipe-block .warn { font-size: 14px; }
+
+  /* Workflow card */
+  .wf-card { flex-direction: column; padding: 16px; gap: 12px; }
+  .wf-flow { gap: 4px; }
+  .wf-icon { width: 52px; height: 52px; font-size: 24px; }
+  .wf-label { font-size: 7px; }
+  .wf-arrow { font-size: 22px; }
+  .wf-name { font-size: 9px; }
+  .wf-dl { font-size: 10px; padding: 8px 14px; }
+  .wf-meta { flex-direction: row; gap: 12px; }
+
+  /* Flow diagram */
+  .flow-d { gap: 4px; }
+  .flow-n { padding: 6px 10px; font-size: 13px; }
+  .flow-n small { font-size: 10px; }
+  .flow-a { font-size: 16px; }
+
+  /* Time bar */
+  .time-bar { padding: 8px 10px; }
+  .bar-r { font-size: 14px; }
+  .bar-l { font-size: 12px; width: 50px; }
+  .bar-t { height: 22px; }
+  .bar-f { font-size: 8px; }
+
+  /* Table */
+  .mario-table th { font-size: 8px; padding: 5px; }
+  .mario-table td { font-size: 13px; padding: 5px; }
+
+  /* Dropdown */
+  .dropdown-head { padding: 12px 14px; }
+  .dropdown-head .dd-icon { font-size: 22px; }
+  .dropdown-head h5 { font-size: 10px; }
+  .dropdown-head .dd-arrow { font-size: 16px; }
+  .dropdown-inner { padding: 0 14px 14px; font-size: 15px; }
+  .dropdown-inner h6 { font-size: 9px; }
+  .dropdown-inner th { font-size: 8px; padding: 5px; }
+  .dropdown-inner td { font-size: 14px; padding: 5px; }
+  .dropdown-inner .tip { font-size: 14px; padding: 10px; }
+
+  /* Ground strip */
+  .ground-strip { height: 70px; gap: 6px; }
+  .ground-btn { font-size: 11px; padding: 6px 12px; }
+  .flag-icon { font-size: 28px; }
+
+  /* Title screen */
+  .title-logo { font-size: 28px; }
+  .title-logo .sub { font-size: 13px; }
+  .title-info { font-size: 9px; line-height: 2; }
+  .title-coins { gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .title-coin { padding: 8px 12px; font-size: 9px; }
+  .title-coin .tv { font-size: 20px; }
+  .title-start { font-size: 13px; padding: 12px 20px; max-width: 100% !important; }
+
+  /* Three path buttons → 垂直排列 */
+  .title-screen > div[style*="display:flex"][style*="gap:16px"] {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  /* QR code section */
+  .title-screen > div[style*="margin-top:36px"] {
+    flex-direction: column !important;
+    padding: 14px !important;
+    gap: 14px !important;
+  }
+
+  /* About page (Roblox style) */
+  .level#about .sky > div:first-child {
+    flex-direction: column !important;
+    gap: 16px !important;
+    padding: 16px !important;
+  }
+  .level#about .sky > div:first-child > div:first-child {
+    width: 120px !important;
+    height: 120px !important;
+  }
+  .level#about .sky > div:first-child > div:last-child > div:first-child {
+    font-size: 11px !important;
+  }
+  .level#about .sky > div:first-child > div:last-child > div:nth-child(2) {
+    font-size: 28px !important;
+  }
+  .level#about .sky > div:first-child > div:last-child > div:nth-child(3) {
+    font-size: 16px !important;
+  }
+  .level#about .sky > div:first-child > div:last-child > div:nth-child(4) {
+    font-size: 16px !important;
+  }
+
+  /* Stat cards (5 columns → 2+3 wrap) */
+  div[style*="grid-template-columns:repeat(5"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Skill bars width */
+  div[style*="display:flex"][style*="gap:14px"] > div[style*="font-size:18px"] {
+    font-size: 14px !important;
+  }
+
+  /* Career grid (2 cols → 1) */
+  div[style*="grid-template-columns:1fr 1fr"][style*="gap:14px"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Scroll hint */
+  .scroll-hint { display: none; }
+
+  /* Marquee (produced by) */
+  div[style*="marquee-run"] span[style*="font-size:40px"] {
+    font-size: 24px !important;
+  }
+
+  /* Transition overlay */
+  #mario-char { font-size: 90px !important; }
+  #mario-text { font-size: 20px !important; }
+  #fire-count span { font-size: 50px !important; }
+}
+
+/* --- Phone small (480px 以下) --- */
+@media (max-width: 480px) {
+  .hud { padding: 6px 8px; font-size: 10px; }
+  .hud-title { font-size: 11px; }
+  .hud-label { font-size: 7px; }
+  .world { padding-top: 42px; }
+  .level, .title-screen { scroll-margin-top: 42px; }
+  .level .sky { padding: 14px 10px 12px; }
+
+  .lvl-num { font-size: 24px; }
+  .lvl-title-box h2 { font-size: 11px; }
+  .lvl-title-box p { font-size: 12px; }
+  .lvl-time { font-size: 11px; }
+
+  .q-block li, .brick-block li, .pipe-block li { font-size: 13px; }
+  .pipe-block p, .pipe-block .note { font-size: 13px; }
+
+  .title-logo { font-size: 20px; }
+  .title-logo .sub { font-size: 10px; }
+  .title-start { font-size: 11px; padding: 10px 16px; }
+  .title-coin { padding: 6px 8px; font-size: 7px; }
+  .title-coin .tv { font-size: 16px; }
+
+  .wf-icon { width: 40px; height: 40px; font-size: 18px; border-radius: 10px; }
+  .wf-arrow { font-size: 16px; }
+  .wf-label { font-size: 6px; max-width: 50px; }
+
+  .ground-btn { font-size: 9px; padding: 5px 10px; }
+
+  .dropdown-inner { font-size: 13px; }
+  .dropdown-inner td { font-size: 12px; }
+
+  /* About page avatar */
+  .level#about .sky > div:first-child > div:first-child {
+    width: 90px !important;
+    height: 90px !important;
+  }
+  .level#about .sky > div:first-child > div:last-child > div:nth-child(2) {
+    font-size: 22px !important;
+  }
+
+  /* Social buttons wrap */
+  .level#about .sky > div:first-child > div:last-child > div:last-child {
+    flex-wrap: wrap !important;
+  }
+  .level#about .sky > div:first-child > div:last-child > div:last-child a {
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+  }
+
+  div[style*="grid-template-columns:repeat(5"] {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  #mario-char { font-size: 60px !important; }
+  #mario-text { font-size: 14px !important; }
+}
 </style>
 </head>
 <body>
