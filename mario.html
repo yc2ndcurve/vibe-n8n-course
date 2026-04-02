@@ -1155,6 +1155,15 @@ body {
 .dd-red .dropdown-inner { color: #f0c0c0; }
 .dd-red .dropdown-inner li::before { color: #ff8080; }
 
+/* ============ Accessibility: reduced motion ============ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* ============================================================
    RWD — Responsive Web Design
    手機/平板自適應，保持 SEO/AEO/GEO 完整
