@@ -356,6 +356,12 @@ h4 { font-size: 18px; }
 h5 { font-size: 16px; }
 h6 { font-size: 14px; }
 
+/* Keyboard navigation focus ring */
+a:focus-visible, button:focus-visible, [role="button"]:focus-visible {
+  outline: 3px solid var(--coin);
+  outline-offset: 2px;
+}
+
 body {
   font-family: "Noto Sans TC", -apple-system, sans-serif;
   background: var(--sky);
