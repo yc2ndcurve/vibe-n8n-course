@@ -130,6 +130,17 @@ pre.j .k{color:#a78bfa}pre.j .s{color:#4ade80}pre.j .n{color:#f59e0b}pre.j .b{co
 .fc{background:linear-gradient(135deg,rgba(238,79,39,.05),rgba(107,33,239,.05));border:1px solid rgba(238,79,39,.18);border-radius:var(--r);padding:2.5rem;text-align:center}
 .fc h2{font-size:1.3rem;margin-bottom:.3rem}.fc .sub{color:var(--tx2);font-size:.88rem;margin-bottom:1.2rem}
 footer{text-align:center;padding:2.5rem 2rem;color:var(--tx3);font-size:.72rem;border-top:1px solid var(--bd)}
+
+/* PAGE NAV INDICATOR */
+.pnav{position:fixed;right:1.2rem;top:50%;transform:translateY(-50%);z-index:99;display:flex;flex-direction:column;gap:.5rem;align-items:center}
+.pnav .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.1);cursor:pointer;transition:all .3s}
+.pnav .dot:hover{background:rgba(255,255,255,.3)}
+.pnav .dot.active{background:var(--pr);border-color:var(--pr);box-shadow:0 0 8px rgba(238,79,39,.4)}
+.pnav-hint{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:99;background:rgba(14,9,24,.85);backdrop-filter:blur(12px);border:1px solid var(--bd);border-radius:999px;padding:.4rem 1.2rem;font-size:.72rem;color:var(--tx3);display:flex;align-items:center;gap:.8rem;opacity:1;transition:opacity .5s}
+.pnav-hint.hide{opacity:0;pointer-events:none}
+.pnav-hint kbd{background:var(--s2);border:1px solid var(--bd);border-radius:4px;padding:.1rem .4rem;font-family:inherit;color:var(--tx2);font-size:.7rem}
+.pnav-counter{position:fixed;bottom:1.5rem;right:1.2rem;z-index:99;font-size:.7rem;color:var(--tx3);background:rgba(14,9,24,.85);backdrop-filter:blur(12px);border:1px solid var(--bd);border-radius:var(--rs);padding:.3rem .7rem}
+@media(max-width:700px){.pnav{right:.5rem;gap:.35rem}.pnav .dot{width:8px;height:8px}.pnav-counter{display:none}}
 </style>
 </head>
 <body>
@@ -139,7 +150,7 @@ footer{text-align:center;padding:2.5rem 2rem;color:var(--tx3);font-size:.72rem;b
   <div class="lnk"><a href="#overview">總覽</a><a href="#chapters">章節</a><a href="#final">專題</a></div>
 </div></nav>
 
-<section class="hero">
+<section class="hero" data-page="0" data-page-label="首頁">
   <div class="sub">Beginner's Complete Guide</div>
   <h1>n8n-as-code<br><span>初學者完全教學手冊</span></h1>
   <p class="desc">從零開始學 n8n 工作流自動化，用程式碼管理 Workflow，串接 LINE Messaging API 推播通知。每一步都有詳細說明與可匯入的 JSON 範例。</p>
@@ -152,7 +163,7 @@ footer{text-align:center;padding:2.5rem 2rem;color:var(--tx3);font-size:.72rem;b
   </div>
 </section>
 
-<section class="sts" id="overview">
+<section class="sts" id="overview" data-page="1" data-page-label="總覽">
   <div class="st"><div class="n c1">6</div><div class="l">堂課</div></div>
   <div class="st"><div class="n c2">24h</div><div class="l">總時數</div></div>
   <div class="st"><div class="n c3">9</div><div class="l">JSON 範例</div></div>
@@ -165,7 +176,7 @@ footer{text-align:center;padding:2.5rem 2rem;color:var(--tx3);font-size:.72rem;b
 <div class="sec-d">每堂 4 小時，從環境建置到完整專題部署。每個章節都附有詳細說明文章與可直接匯入 n8n 的 JSON 範例。</div>
 
 <!-- ====================== CH1 ====================== -->
-<div class="ch t1 open" id="ch1">
+<div class="ch t1 open" id="ch1" data-page="2" data-page-label="Ch1">
 <div class="chh" onclick="T(this)"><div class="chn">01</div><div class="chm"><h3>環境建置 & 第一個 Workflow</h3><p>安裝 n8n、認識編輯器介面、建立並匯出你的第一條自動化流程</p></div><div class="cht">4 小時</div><div class="cha">&#9660;</div></div>
 <div class="chb"><div class="chi"><div class="g2">
 
@@ -414,7 +425,7 @@ npx n8n
 </div>
 
 <!-- ====================== CH2 ====================== -->
-<div class="ch t2" id="ch2">
+<div class="ch t2" id="ch2" data-page="3" data-page-label="Ch2">
 <div class="chh" onclick="T(this)"><div class="chn">02</div><div class="chm"><h3>資料流 & 觸發器</h3><p>掌握 n8n 資料結構、表達式語法、Schedule / Webhook / Form 三種觸發方式</p></div><div class="cht">4 小時</div><div class="cha">&#9660;</div></div>
 <div class="chb"><div class="chi"><div class="g2">
 
@@ -571,7 +582,7 @@ npx n8n
 </div>
 
 <!-- ====================== CH3 ====================== -->
-<div class="ch t3" id="ch3">
+<div class="ch t3" id="ch3" data-page="4" data-page-label="Ch3">
 <div class="chh" onclick="T(this)"><div class="chn">03</div><div class="chm"><h3>邏輯判斷 & API 串接</h3><p>IF / Switch 條件分流、REST API 基礎觀念、HTTP Request 呼叫外部 API</p></div><div class="cht">4 小時</div><div class="cha">&#9660;</div></div>
 <div class="chb"><div class="chi"><div class="g2">
 
@@ -694,7 +705,7 @@ npx n8n
 </div>
 
 <!-- ====================== CH4 ====================== -->
-<div class="ch t4" id="ch4">
+<div class="ch t4" id="ch4" data-page="5" data-page-label="Ch4">
 <div class="chh" onclick="T(this)"><div class="chn">04</div><div class="chm"><h3>LINE 推播整合</h3><p>LINE Messaging API 設定、推播通知、每日天氣自動推播系統</p></div><div class="cht">4 小時</div><div class="cha">&#9660;</div></div>
 <div class="chb"><div class="chi"><div class="g2">
 
@@ -840,7 +851,7 @@ return [{ json: { message } }];</pre>
 </div>
 
 <!-- ====================== CH5 ====================== -->
-<div class="ch t5" id="ch5">
+<div class="ch t5" id="ch5" data-page="6" data-page-label="Ch5">
 <div class="chh" onclick="T(this)"><div class="chn">05</div><div class="chm"><h3>n8n-as-code 代碼化管理</h3><p>CLI 安裝、JSON 轉 TypeScript、Git 版控、AI Skills 搜尋系統</p></div><div class="cht">4 小時</div><div class="cha">&#9660;</div></div>
 <div class="chb"><div class="chi"><div class="g2">
 
@@ -953,7 +964,7 @@ export class SlackNotifierWorkflow {
 </div>
 
 <!-- ====================== CH6 ====================== -->
-<div class="ch t6" id="ch6">
+<div class="ch t6" id="ch6" data-page="7" data-page-label="Ch6">
 <div class="chh" onclick="T(this)"><div class="chn">06</div><div class="chm"><h3>期末專題：表單報名自動通知系統</h3><p>整合六堂所學，獨立完成一個端到端的自動化系統並用 Git 版控</p></div><div class="cht">4 小時</div><div class="cha">&#9660;</div></div>
 <div class="chb"><div class="chi"><div class="g2">
 
@@ -1066,7 +1077,7 @@ export class SlackNotifierWorkflow {
 </section>
 
 <!-- FINAL -->
-<section class="sec" id="final">
+<section class="sec" id="final" data-page="8" data-page-label="總結">
 <div class="fc">
   <h2>課程總覽</h2>
   <p class="sub">6 堂課 / 24 小時 / 9 個 JSON 範例 / 1 個完整專題</p>
@@ -1081,6 +1092,99 @@ export class SlackNotifierWorkflow {
 
 <footer>n8n-as-code 初學者完全教學手冊 v3.0 — 2026</footer>
 
-<script>function T(e){e.closest('.ch').classList.toggle('open')}</script>
+<!-- Page Navigation Indicator -->
+<div class="pnav" id="pnav" aria-label="頁面導覽"></div>
+<div class="pnav-hint" id="pnavHint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> 左右鍵切換章節</div>
+<div class="pnav-counter" id="pnavCounter"></div>
+
+<script>
+function T(e){e.closest('.ch').classList.toggle('open')}
+
+(function(){
+  var pages=document.querySelectorAll('[data-page]');
+  var nav=document.getElementById('pnav');
+  var hint=document.getElementById('pnavHint');
+  var counter=document.getElementById('pnavCounter');
+  var current=0;
+  var scrolling=false;
+  var total=pages.length;
+
+  // Build dots
+  pages.forEach(function(p,i){
+    var d=document.createElement('div');
+    d.className='dot'+(i===0?' active':'');
+    d.title=p.getAttribute('data-page-label');
+    d.setAttribute('aria-label','前往 '+d.title);
+    d.addEventListener('click',function(){goTo(i)});
+    nav.appendChild(d);
+  });
+
+  function updateIndicator(){
+    var dots=nav.querySelectorAll('.dot');
+    dots.forEach(function(d,i){d.classList.toggle('active',i===current)});
+    var label=pages[current].getAttribute('data-page-label');
+    counter.textContent=(current+1)+' / '+total+' — '+label;
+  }
+
+  function goTo(idx){
+    if(idx<0||idx>=total||scrolling)return;
+    current=idx;
+    scrolling=true;
+    // Auto-expand chapter if collapsed
+    var target=pages[idx];
+    if(target.classList.contains('ch')&&!target.classList.contains('open')){
+      target.classList.add('open');
+    }
+    var navH=document.querySelector('nav').offsetHeight;
+    var top=target.getBoundingClientRect().top+window.pageYOffset-navH-10;
+    window.scrollTo({top:top,behavior:'smooth'});
+    updateIndicator();
+    setTimeout(function(){scrolling=false},600);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown',function(e){
+    if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.isContentEditable)return;
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'){
+      e.preventDefault();
+      goTo(current+1);
+    }else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){
+      e.preventDefault();
+      goTo(current-1);
+    }
+  });
+
+  // Track current page on scroll
+  var ticking=false;
+  window.addEventListener('scroll',function(){
+    if(!ticking){
+      requestAnimationFrame(function(){
+        if(!scrolling){
+          var navH=document.querySelector('nav').offsetHeight;
+          var scrollPos=window.pageYOffset+navH+window.innerHeight*0.3;
+          for(var i=total-1;i>=0;i--){
+            if(pages[i].getBoundingClientRect().top+window.pageYOffset<=scrollPos){
+              if(current!==i){current=i;updateIndicator()}
+              break;
+            }
+          }
+        }
+        ticking=false;
+      });
+      ticking=true;
+    }
+  });
+
+  // Hide hint after 5s or first key press
+  var hintTimer=setTimeout(function(){hint.classList.add('hide')},5000);
+  document.addEventListener('keydown',function hideHint(){
+    clearTimeout(hintTimer);
+    hint.classList.add('hide');
+    document.removeEventListener('keydown',hideHint);
+  },{once:false});
+
+  updateIndicator();
+})();
+</script>
 </body>
 </html>

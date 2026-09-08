@@ -2,3 +2,15 @@
 node_modules/
 .env
 *.log
+
+# Migration outputs and secrets
+.env
+.env.*
+!.env.example
+dist/
+__pycache__/
+*.sqlite*
+*.db
+*.pem
+*.key
+private-source/
