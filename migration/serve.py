@@ -7,16 +7,17 @@ from urllib.parse import urlsplit
 import argparse
 ROOT = Path(__file__).resolve().parents[1] / 'dist'
 class Handler(SimpleHTTPRequestHandler):
-    def do_GET(self):
+    def route(self):
         path = urlsplit(self.path).path
         if path == '/':
             self.path = '/mario.html'
         elif not (ROOT / path.lstrip('/')).exists():
             self.path = '/mario.html'
+    def do_GET(self):
+        self.route()
         super().do_GET()
     def do_HEAD(self):
-        if urlsplit(self.path).path == '/':
-            self.path = '/mario.html'
+        self.route()
         super().do_HEAD()
 p = argparse.ArgumentParser()
 p.add_argument('--port', type=int, default=8082)
