@@ -1,4 +1,8 @@
 #!/bin/bash
+# Migration guard: this legacy script removes the shared production nginx default.
+printf "%s\n" "STOP: legacy deployment disabled. Use README-MIGRATION.md and the isolated migration/nginx-site.conf.example." >&2
+exit 64
+
 # ================================================================
 # 部署腳本：vibe.scendia.com.tw
 #

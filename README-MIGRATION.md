@@ -34,3 +34,15 @@ vibe 另使用 jsDelivr 的 qrcodejs@1.0.0，以及 stanleylin.tw 的講師照�
 既有 `deploy/deploy.sh` 留作歷史，**不要直接執行**。它含移除 nginx default 設定的動作；目前 default 同時承載 even、vibe、n8n，直接執行可能中斷其他站。此次沒有執行它。請使用新的單站配置範例規劃部署。
 
 保留原 Git 歷史及正式站上兩份未提交 HTML 修改。
+
+## 乾淨 checkout 與部署包
+
+```sh
+python3 migration/package.py
+```
+
+輸出 `release/vibe-static.tar.gz`：只有固定清單中的公開資產、單站 nginx 範例與 SHA256 manifest。以新的 checkout 重建；`dist/` 是可重建產物，build 會清除舊輸出，避免殘留檔意外發布。只使用 Python 標準函式庫，無套件安裝或 runtime secrets。
+
+在**新主機或獨立站點目錄**解壓縮後，nginx root 對應 `/srv/vibe.scendia.com.tw/dist`。先驗證 HTTP，再由目標平台配置 HTTPS。範例設定只新增此站，不能刪除共用 default。套用任何正式設定前需通過 `nginx -t` 並由總指揮安排切流。不要從原始私人 tar 或整個 repo 建公開 web root。
+
+遠端只保存 `codex/preserve-production-20260909` 分支，不包含 stash refs；來源 stash 與完整 Git metadata 仍由受限備份保存。Git bundle 與原始私有封存是備份，不應當作網站上傳。
